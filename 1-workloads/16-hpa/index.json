@@ -1,0 +1,22 @@
+{
+  "title": "16 - HPA",
+  "description": "Create a Deployment with a CPU request, expose it with a ClusterIP Service, and add a HorizontalPodAutoscaler that scales on CPU utilization.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Create the deployment, service, and HPA",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

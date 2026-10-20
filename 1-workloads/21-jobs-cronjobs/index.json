@@ -1,0 +1,22 @@
+{
+  "title": "21 - Jobs & CronJobs",
+  "description": "Create a Job that completes 3 times and a CronJob that runs every hour, then trigger the CronJob manually.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Job, CronJob, and manual trigger",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

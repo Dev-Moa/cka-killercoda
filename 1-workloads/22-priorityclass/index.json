@@ -1,0 +1,22 @@
+{
+  "title": "22 - PriorityClass",
+  "description": "Create two PriorityClasses with different values and preemption policies, and run one pod in each class.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Create the PriorityClasses and pods",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

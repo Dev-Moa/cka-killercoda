@@ -27,6 +27,25 @@ See https://killercoda.com/creators for the full docs.
 
 ## Scenarios
 
-| folder | exercise | image |
-| --- | --- | --- |
-| `10-static-pod/` | static pod in the kubelet manifest directory | `kubernetes-kubeadm-2nodes` |
+Scenarios are grouped by domain folder (a subdirectory is a scenario
+group in Killercoda). All run on the `kubernetes-kubeadm-2nodes` image:
+root on `controlplane`, `node01` reachable via `ssh node01`.
+
+### `1-workloads/` — Domain 1: Workloads & Scheduling
+
+| folder | exercise |
+| --- | --- |
+| `01-pod-basics/` | pod with requests, limits, labels |
+| `02-multi-container-pod/` | multi-container pod with a native sidecar |
+| `03-configmap-secret/` | ConfigMap & Secret into env and mounts |
+| `06-deployment-rollout/` | rolling update, rollout history, rollback |
+| `07-statefulset/` | StatefulSet + headless Service |
+| `10-static-pod/` | static pod in the kubelet manifest directory |
+| `16-hpa/` | Horizontal Pod Autoscaler |
+| `21-jobs-cronjobs/` | Jobs & CronJobs |
+| `22-priorityclass/` | PriorityClass + preemptionPolicy |
+| `23-resource-requests-tuning/` | fix oversubscribed requests |
+| `24-priorityclass-patch/` | patch a PriorityClass into a Deployment |
+| `w01-taints-and-tolerations/` | taints & tolerations |
+| `w02-node-selectors-and-affinity/` | nodeSelector & node affinity |
+| `w03-daemonset/` | DaemonSet with control-plane toleration |

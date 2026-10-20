@@ -1,0 +1,22 @@
+{
+  "title": "07 - StatefulSet",
+  "description": "Create a headless Service and a StatefulSet, then scale it down so the end state matches the exam's checks.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Build and scale the StatefulSet",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

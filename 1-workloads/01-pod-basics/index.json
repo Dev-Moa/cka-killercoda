@@ -1,0 +1,22 @@
+{
+  "title": "01 - Pod basics",
+  "description": "Create a pod with resource requests, limits, and labels, then add and remove labels on the running pod.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Create the pod",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

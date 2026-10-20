@@ -1,0 +1,22 @@
+{
+  "title": "02 - Multi-container pod",
+  "description": "Create a pod with a main container and a native sidecar that tails the main container's log file.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Create the pod with a native sidecar",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

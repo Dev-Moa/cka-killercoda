@@ -1,0 +1,22 @@
+{
+  "title": "06 - Deployment Rollout",
+  "description": "Create a Deployment, run a rolling update, check the rollout history, and roll back.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Create, update, and roll back",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

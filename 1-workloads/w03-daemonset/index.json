@@ -1,0 +1,22 @@
+{
+  "title": "w03 - DaemonSet",
+  "description": "Create a DaemonSet that runs one pod on every node, then add a toleration so it also reaches the tainted control plane.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Run the DaemonSet on every node",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

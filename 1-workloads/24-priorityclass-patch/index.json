@@ -1,0 +1,22 @@
+{
+  "title": "24 - PriorityClass patch",
+  "description": "Create a PriorityClass, patch a Deployment's pod template to use it, and add a lower-priority Deployment to compare.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "PriorityClass and patch",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "title": "23 - Resource requests tuning",
+  "description": "Debug a Deployment whose pods stay Pending because of impossible resource requests, then lower the requests so all 3 replicas schedule and run.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Fix the resource requests",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}
