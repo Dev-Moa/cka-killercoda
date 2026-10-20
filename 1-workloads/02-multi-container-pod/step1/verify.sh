@@ -1,7 +1,7 @@
 #!/bin/bash
 # Checks 1-4 each print PASS or FAIL with the exact actual-vs-expected
 # evidence. All checks run (no early exit), so one click shows every
-# failing part and how to fix it.
+# failing part.
 
 fail=0
 
@@ -18,7 +18,6 @@ else
     if [ -n "$where" ]; then
       echo "       the pod exists, but NOT in exercise-02:"
       echo "       $where"
-      echo "       fix: put namespace: exercise-02 in the pod YAML (or apply with -n exercise-02)"
     else
       echo "       no pod named 'logger' found in any namespace"
     fi
@@ -54,7 +53,6 @@ else
   echo "       actual container 'app' mounts:    ${app_mnt:-none}"
   echo "       actual initContainer 'log-agent': ${agent_mnt:-none}"
   echo "       actual volume log-volume emptyDir: ${vol:-none}"
-  echo "       fix: main container must be named 'app', the volume named 'log-volume' (emptyDir), both mounted at /var/log/app"
   fail=1
 fi
 
@@ -70,12 +68,11 @@ else
   last=$(kubectl logs logger -n exercise-02 -c log-agent --tail=3 2>&1 | head -3)
   echo "FAIL 4: log-agent logs must contain the exact string 'app running'"
   echo "       last log lines: ${last:-<empty>}"
-  echo "       fix: the app container must write a line containing 'app running' to /var/log/app/app.log, and both containers must mount log-volume at /var/log/app"
   fail=1
 fi
 
 if [ "$fail" = "1" ]; then
-  echo "RESULT: FAIL - see the FAIL lines above for what to fix"
+  echo "RESULT: FAIL - see the FAIL lines above"
   exit 1
 fi
 echo "RESULT: PASS - pod logger is 2/2 Running, log-agent is a native sidecar, log-volume is shared, logs stream"
