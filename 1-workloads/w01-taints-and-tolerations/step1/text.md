@@ -1,5 +1,14 @@
 # Taint, tolerate, restore
 
+Taint a node so it repels pods, then let one pod in with a toleration.
+This tests that you know which side the taint goes on (the node) and
+which side the toleration goes on (the pod), and that you can remove a
+taint.
+
+Do this question last. Its end state leaves the worker node tainted
+(`spray=mortein:NoSchedule`), which stops new pods from the other
+questions from scheduling.
+
 The cluster has a control plane node and one worker node.
 
 1. Find the name of the worker node.
@@ -18,24 +27,5 @@ The cluster has a control plane node and one worker node.
 
 End state: `mosquito` Running on the control plane node, `bee` Running
 on the worker node, and both taints present.
-
-Useful commands:
-
-`kubectl taint nodes node01 spray=mortein:NoSchedule`{{exec}}
-
-`kubectl taint nodes controlplane node-role.kubernetes.io/control-plane:NoSchedule-`{{exec}}
-
-`kubectl taint nodes controlplane node-role.kubernetes.io/control-plane:NoSchedule`{{exec}}
-
-For `bee`, generate the pod YAML first, then add this under `spec`, at
-the same level as `containers`:
-
-```yaml
-tolerations:
-- key: spray
-  operator: Equal
-  value: mortein
-  effect: NoSchedule
-```{{copy}}
 
 When done, click CHECK.

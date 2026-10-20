@@ -25,6 +25,12 @@ labs host everything else. One folder = one scenario.
 
 See https://killercoda.com/creators for the full docs.
 
+Rule: step texts carry the question only — Context paragraph plus the
+requirements verbatim. No solution manifests, patch commands, or answer
+blocks of any kind (`{{exec}}` only on commands the question text itself
+contains). The CHECK script is the grader; the exam facts in `finish.md`
+are shown only after the exercise is done.
+
 ## Scenarios
 
 Scenarios are grouped by domain folder (a subdirectory is a scenario

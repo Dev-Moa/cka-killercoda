@@ -1,19 +1,21 @@
 # Create the pod
 
-1. Create a namespace called `exercise-01`:
+A pod is the smallest unit in Kubernetes — it runs one or more
+containers. In this exercise you create one pod with resource requests,
+limits, and labels, then add and remove labels on the running pod. The
+check looks at the exact namespace, labels, and resource values, so
+small mistakes lose points.
 
-   `kubectl create namespace exercise-01`{{exec}}
+1. Create a namespace called `exercise-01`.
 
 2. Create a pod named `web` in the `exercise-01` namespace with:
 
-   - image `nginx:1.27`
-   - labels `app=web`, `tier=frontend`
-   - resource requests: `64Mi` memory, `100m` CPU
-   - resource limits: `128Mi` memory, `250m` CPU
+   - Image: `nginx:1.27`
+   - Labels: `app=web`, `tier=frontend`
+   - Resource requests: `64Mi` memory, `100m` CPU
+   - Resource limits: `128Mi` memory, `250m` CPU
 
-3. Verify the pod is Running and has the correct labels:
-
-   `kubectl get pod web -n exercise-01 --show-labels`{{exec}}
+3. Verify the pod is running and has the correct labels.
 
 4. Get the pod's IP address:
 
@@ -21,36 +23,8 @@
 
    Look only — nothing to change.
 
-5. Add the label `version=v1` to the running pod:
+5. Add the label `version=v1` to the running pod.
 
-   `kubectl label pod web -n exercise-01 version=v1`{{exec}}
-
-6. Remove the `tier` label from the pod:
-
-   `kubectl label pod web -n exercise-01 tier-`{{exec}}
-
-Use this manifest:
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: web
-  namespace: exercise-01
-  labels:
-    app: web
-    tier: frontend
-spec:
-  containers:
-  - name: web
-    image: nginx:1.27
-    resources:
-      requests:
-        memory: "64Mi"
-        cpu: "100m"
-      limits:
-        memory: "128Mi"
-        cpu: "250m"
-```{{copy}}
+6. Remove the `tier` label from the pod.
 
 When done, click **CHECK**.

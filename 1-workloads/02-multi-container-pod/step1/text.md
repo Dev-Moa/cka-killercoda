@@ -1,4 +1,10 @@
-# Create the pod with a native sidecar
+A native sidecar (v1.35) is an init container with
+`restartPolicy: Always`: it starts before the main container and keeps
+running next to it for the pod's whole life. Here one container writes
+a log line every 3 seconds and the sidecar tails the same file through
+a shared `emptyDir` volume — the classic sidecar logging pattern the
+exam tests. The trap: the sidecar must go in `initContainers`, not
+`containers`, or it loses its start-order guarantee.
 
 Create a pod with a main container and a native sidecar that tails the
 main container's log file.
@@ -16,16 +22,10 @@ main container's log file.
      same shared volume at `/var/log/app`
    - An `emptyDir` volume named `log-volume` shared by both containers
 
-3. Check both containers are running:
+3. Verify both containers are running (READY 2/2).
 
-   `kubectl get pod logger -n exercise-02`{{exec}}
-
-   The pod must show READY `2/2`.
-
-4. Check the sidecar's logs:
-
-   `kubectl logs logger -n exercise-02 -c log-agent`{{exec}}
-
-   You should see the streamed output.
+4. Check the sidecar's logs with
+   `kubectl logs logger -n exercise-02 -c log-agent`{{exec}} — you
+   should see the streamed output.
 
 When done, click **CHECK**.

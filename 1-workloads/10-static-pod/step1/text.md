@@ -1,5 +1,9 @@
 # Create the static pod
 
+Create a static pod by placing a manifest in the kubelet's static pod
+directory. Static pods are managed directly by the kubelet, not the API
+server. You create the manifest yourself and place it in that directory.
+
 1. Find the kubelet's static pod directory:
 
    `cat /var/lib/kubelet/config.yaml | grep staticPodPath`{{exec}}
@@ -14,27 +18,8 @@
 
    `kubectl get pods | grep static-web`{{exec}}
 
-   The pod name gets the node name appended: `static-web-controlplane`.
+   The pod name gets the node name appended.
 
-4. Try to delete it with kubectl and watch what happens:
-
-   `kubectl delete pod static-web-controlplane`{{exec}}
-
-Use this manifest:
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: static-web
-  labels:
-    app: static-web
-spec:
-  containers:
-  - name: web
-    image: nginx:1.27
-    ports:
-    - containerPort: 80
-```{{copy}}
+4. Try to delete the pod with kubectl and observe what happens.
 
 When the pod is Running, click **CHECK**.
