@@ -1,0 +1,5 @@
+# Killercoda runs these files on Linux — keep scripts LF in the repo
+# no matter what the committing machine's autocrlf setting is.
+*.sh text eol=lf
+*.md text eol=lf
+*.json text eol=lf
