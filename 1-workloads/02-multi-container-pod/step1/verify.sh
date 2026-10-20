@@ -2,6 +2,10 @@
 # Checks 1-4 each print PASS or FAIL with the exact actual-vs-expected
 # evidence. All checks run (no early exit), so one click shows every
 # failing part.
+# The full output is also written to /tmp/check-report.txt, so the
+# candidate can read the reasons even if the CHECK UI hides them.
+: > /tmp/check-report.txt
+exec > >(tee -a /tmp/check-report.txt) 2>&1
 
 fail=0
 

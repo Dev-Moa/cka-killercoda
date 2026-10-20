@@ -28,4 +28,7 @@ main container's log file.
    `kubectl logs logger -n exercise-02 -c log-agent`{{exec}} — you
    should see the streamed output.
 
+If CHECK fails without showing why, read the full report:
+`cat /tmp/check-report.txt`{{exec}}
+
 When done, click **CHECK**.
