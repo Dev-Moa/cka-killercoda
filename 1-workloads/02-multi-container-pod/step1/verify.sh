@@ -1,29 +1,45 @@
 #!/bin/bash
-# All checks in the order of the question's verification list.
-# Each check prints a one-line pass or failure reason and exit 1 on the
-# first failure; after all checks pass, print one overall success line.
+# Checks 1-4 each print PASS or FAIL with the exact actual-vs-expected
+# evidence. All checks run (no early exit), so one click shows every
+# failing part and how to fix it.
 
-# Check 1: pod logger in exercise-02 is Running with 2/2 ready
+fail=0
+
+# --- Check 1: pod logger in exercise-02 is 2/2 Running ---
 line=$(kubectl get pod logger -n exercise-02 --no-headers 2>/dev/null)
 ready=$(echo "$line" | awk '{print $2}')
 status=$(echo "$line" | awk '{print $3}')
 if [ "$ready" = "2/2" ] && [ "$status" = "Running" ]; then
-  echo "pod logger is Running with 2/2 containers ready"
+  echo "PASS 1: pod logger in exercise-02 is 2/2 Running"
 else
-  echo "pod logger not 2/2 Running (ready=${ready:-none}, status=${status:-not found})"
-  exit 1
+  echo "FAIL 1: expected pod 'logger' in namespace 'exercise-02' to be 2/2 Running"
+  if [ -z "$line" ]; then
+    where=$(kubectl get pods -A --no-headers 2>/dev/null | grep -E '\blogger\b' || true)
+    if [ -n "$where" ]; then
+      echo "       the pod exists, but NOT in exercise-02:"
+      echo "       $where"
+      echo "       fix: put namespace: exercise-02 in the pod YAML (or apply with -n exercise-02)"
+    else
+      echo "       no pod named 'logger' found in any namespace"
+    fi
+  else
+    echo "       actual: ready=${ready:-none} status=${status:-none}"
+  fi
+  fail=1
 fi
 
-# Check 2: initContainer log-agent is a native sidecar (restartPolicy: Always)
+# --- Check 2: initContainer log-agent is a native sidecar (restartPolicy: Always) ---
 policy=$(kubectl get pod logger -n exercise-02 -o jsonpath='{.spec.initContainers[?(@.name=="log-agent")].restartPolicy}' 2>/dev/null)
 if [ "$policy" = "Always" ]; then
-  echo "initContainer log-agent is a native sidecar (restartPolicy: Always)"
+  echo "PASS 2: initContainer log-agent has restartPolicy: Always"
 else
-  echo "initContainer log-agent with restartPolicy: Always not found (got: ${policy:-none})"
-  exit 1
+  names=$(kubectl get pod logger -n exercise-02 -o jsonpath='{range .spec.initContainers[*]}{.name}{" (restartPolicy="}{.restartPolicy}{") "}{end}' 2>/dev/null)
+  echo "FAIL 2: expected an initContainer named 'log-agent' with restartPolicy: Always"
+  echo "       initContainers found: ${names:-none}"
+  fail=1
 fi
 
-# Check 3: emptyDir log-volume mounted at /var/log/app in both containers
+# --- Check 3: emptyDir log-volume mounted at /var/log/app in both containers ---
 app_mnt=$(kubectl get pod logger -n exercise-02 -o jsonpath='{.spec.containers[?(@.name=="app")].volumeMounts}' 2>/dev/null)
 agent_mnt=$(kubectl get pod logger -n exercise-02 -o jsonpath='{.spec.initContainers[?(@.name=="log-agent")].volumeMounts}' 2>/dev/null)
 vol=$(kubectl get pod logger -n exercise-02 -o jsonpath='{.spec.volumes[?(@.name=="log-volume")].emptyDir}' 2>/dev/null)
@@ -32,24 +48,35 @@ if echo "$app_mnt" | grep -q '"name":"log-volume"' \
   && echo "$agent_mnt" | grep -q '"name":"log-volume"' \
   && echo "$agent_mnt" | grep -q '"mountPath":"/var/log/app"' \
   && [ "$vol" = "{}" ]; then
-  echo "emptyDir log-volume mounted at /var/log/app in both containers"
+  echo "PASS 3: emptyDir log-volume mounted at /var/log/app in app and log-agent"
 else
-  echo "log-volume mount check failed (app or log-agent missing the /var/log/app mount, or volume not emptyDir)"
-  exit 1
+  echo "FAIL 3: expected emptyDir volume 'log-volume' mounted at '/var/log/app' in BOTH container 'app' and initContainer 'log-agent'"
+  echo "       actual container 'app' mounts:    ${app_mnt:-none}"
+  echo "       actual initContainer 'log-agent': ${agent_mnt:-none}"
+  echo "       actual volume log-volume emptyDir: ${vol:-none}"
+  echo "       fix: main container must be named 'app', the volume named 'log-volume' (emptyDir), both mounted at /var/log/app"
+  fail=1
 fi
 
-# Check 4: log-agent logs contain 'app running' (app writes every 3s, so retry)
+# --- Check 4: log-agent logs contain 'app running' ---
 found=""
 for i in 1 2 3 4 5; do
   kubectl logs logger -n exercise-02 -c log-agent 2>/dev/null | grep -q "app running" && { found=yes; break; }
   sleep 2
 done
 if [ "$found" = "yes" ]; then
-  echo "log-agent logs contain 'app running'"
+  echo "PASS 4: log-agent logs contain 'app running'"
 else
-  echo "log-agent logs do not contain 'app running'"
-  exit 1
+  last=$(kubectl logs logger -n exercise-02 -c log-agent --tail=3 2>&1 | head -3)
+  echo "FAIL 4: log-agent logs must contain the exact string 'app running'"
+  echo "       last log lines: ${last:-<empty>}"
+  echo "       fix: the app container must write a line containing 'app running' to /var/log/app/app.log, and both containers must mount log-volume at /var/log/app"
+  fail=1
 fi
 
-echo "All checks passed: pod logger is 2/2 Running, log-agent is a native sidecar, log-volume is shared, logs stream"
+if [ "$fail" = "1" ]; then
+  echo "RESULT: FAIL - see the FAIL lines above for what to fix"
+  exit 1
+fi
+echo "RESULT: PASS - pod logger is 2/2 Running, log-agent is a native sidecar, log-volume is shared, logs stream"
 exit 0
