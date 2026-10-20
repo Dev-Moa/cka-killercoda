@@ -60,18 +60,18 @@ else
   fail=1
 fi
 
-# --- Check 4: log-agent logs contain 'app running' ---
+# --- Check 4: log-agent logs stream the app's lines (exercise Verify:
+# "should see the log lines from the app container"). Any content passes -
+# never assert on the candidate's own text. ---
 found=""
 for i in 1 2 3 4 5; do
-  kubectl logs logger -n exercise-02 -c log-agent 2>/dev/null | grep -q "app running" && { found=yes; break; }
+  [ -n "$(kubectl logs logger -n exercise-02 -c log-agent 2>/dev/null)" ] && { found=yes; break; }
   sleep 2
 done
 if [ "$found" = "yes" ]; then
-  echo "PASS 4: log-agent logs contain 'app running'"
+  echo "PASS 4: log-agent logs show the app's log lines"
 else
-  last=$(kubectl logs logger -n exercise-02 -c log-agent --tail=3 2>&1 | head -3)
-  echo "FAIL 4: log-agent logs must contain the exact string 'app running'"
-  echo "       last log lines: ${last:-<empty>}"
+  echo "FAIL 4: log-agent logs are empty - nothing is streaming into them"
   fail=1
 fi
 

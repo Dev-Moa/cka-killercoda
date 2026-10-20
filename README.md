@@ -30,6 +30,10 @@ requirements verbatim. No solution manifests, patch commands, or answer
 blocks of any kind (`{{exec}}` only on commands the question text itself
 contains). The CHECK script is the grader; the exam facts in `finish.md`
 are shown only after the exercise is done.
+Validators check objects and specs only — port the exercise's Verify
+section (CKA-Certified-Kubernetes-Administrator/exercises) and the
+question's graded fields. Never assert on log text or other free-form
+content the candidate writes.
 
 ## Scenarios
 
