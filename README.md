@@ -59,3 +59,4 @@ root on `controlplane`, `node01` reachable via `ssh node01`.
 | `w01-taints-and-tolerations/` | taints & tolerations |
 | `w02-node-selectors-and-affinity/` | nodeSelector & node affinity |
 | `w03-daemonset/` | DaemonSet with control-plane toleration |
+| `w04-commands-and-arguments/` | command & args overrides |
