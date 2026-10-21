@@ -15,23 +15,15 @@ Pick one worker node. Call it `<worker>` below.
 3. Create a pod named `data-processor` with image `nginx` that must run
    on a node labeled `size=Large`, using `nodeSelector`. Verify it lands
    on `<worker>`.
-4. Label the same `<worker>` node with `color=blue`. Both labels stay on
-   this one worker node — the control plane node gets no labels in this
-   exercise.
+4. Label `<worker>` with `color=blue`.
 5. Create a deployment named `blue` with image `nginx` and 3 replicas.
-   Its pods must carry the label `app=blue` (`kubectl create deployment
-   blue --image=nginx` sets it automatically). Check which nodes its
-   pods can go to (think about taints).
+   Check which nodes its pods can go to (think about taints).
 6. Edit the deployment `blue` so its pods run only on nodes where the
    label `color` is `blue`, using node affinity. Verify all 3 pods are
    on `<worker>`.
 7. Create a deployment named `red` with image `nginx` and 2 replicas
-   that runs only on the control plane node: node affinity with the
-   `Exists` operator on the label
-   `node-role.kubernetes.io/control-plane`, and its pods must carry the
-   label `app=red`. The control plane node is tainted
-   (`node-role.kubernetes.io/control-plane:NoSchedule`), so the pods
-   also need a toleration for that taint or they stay Pending. Verify.
+   that runs only on the control plane node, using node affinity with
+   the `Exists` operator. Verify.
 
 ## Hints
 
