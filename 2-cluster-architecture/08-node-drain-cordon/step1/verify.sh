@@ -1,5 +1,6 @@
 #!/bin/bash
-# 08 step 1: node01 cordoned and drained, drain-test pods evicted off node01.
+# 08 step 1: node01 cordoned and drained, the candidate's 3-replica
+# Deployment (any name - the task does not fix one) evicted off node01.
 # Evidence-only output, also written to /tmp/check-report.txt.
 : > /tmp/check-report.txt
 exec > >(tee -a /tmp/check-report.txt) 2>&1
@@ -15,19 +16,22 @@ else
   fail=1
 fi
 
-# Check 2: deployment drain-test exists with 3 replicas
-replicas=$(kubectl get deployment drain-test -o jsonpath='{.spec.replicas}' 2>/dev/null)
-if [ "$replicas" = "3" ]; then
-  echo "PASS 2: deployment drain-test has 3 replicas"
+# Check 2: a Deployment with 3 replicas exists in default (task 4 does
+# not fix the name, so take the first one with spec.replicas=3)
+deploy=$(kubectl get deploy -n default -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.spec.replicas}{"\n"}{end}' 2>/dev/null \
+  | awk '$2=="3" {print $1; exit}')
+if [ -n "$deploy" ]; then
+  echo "PASS 2: deployment $deploy has 3 replicas"
 else
-  echo "FAIL 2: expected 3 replicas (got ${replicas:-not found})"
+  names=$(kubectl get deploy -n default -o jsonpath='{range .items[*]}{.metadata.name}{"="}{.spec.replicas}{" "}{end}' 2>/dev/null)
+  echo "FAIL 2: no Deployment with 3 replicas in default (found: ${names:-none})"
   fail=1
 fi
 
-# Check 3: all 3 drain-test pods are Ready
-ready=$(kubectl get deployment drain-test -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
+# Check 3: all 3 pods of that Deployment are Ready
+ready=$(kubectl get deployment "$deploy" -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
 if [ "$ready" = "3" ]; then
-  echo "PASS 3: 3 drain-test pods Ready"
+  echo "PASS 3: 3 ${deploy:-deployment} pods Ready"
 else
   echo "FAIL 3: expected 3 ready pods (readyReplicas=${ready:-0})"
   fail=1
@@ -48,5 +52,5 @@ if [ "$fail" = "1" ]; then
   echo "RESULT: FAIL - see the FAIL lines above"
   exit 1
 fi
-echo "RESULT: PASS - node01 cordoned and drained, drain-test Running elsewhere"
+echo "RESULT: PASS - node01 cordoned and drained, ${deploy} Running elsewhere"
 exit 0

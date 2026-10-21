@@ -28,7 +28,7 @@ Install and configure cri-dockerd as a container runtime alternative to containe
 - Enable IP forwarding: `sudo sysctl -w net.ipv4.ip_forward=1`
 - Load modules: `sudo modprobe overlay` and `sudo modprobe br_netfilter`
 - Check socket: `ls -la /run/cri-dockerd.sock`
-- Kubelet config: `--container-runtime=remote --container-runtime-endpoint=unix:///run/cri-dockerd.sock`
+- Kubelet config: `--container-runtime-endpoint=unix:///run/cri-dockerd.sock` in `/var/lib/kubelet/kubeadm-flags.env`
 
 </details>
 

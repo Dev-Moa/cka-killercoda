@@ -21,21 +21,26 @@ else
   fail=1
 fi
 
+# The Mirantis package installs the units as cri-docker.service and
+# cri-docker.socket (no trailing d). Accept a hand-made cri-dockerd unit too.
+unit=$(sshq 'for u in cri-docker.service cri-dockerd.service; do systemctl cat "$u" >/dev/null 2>&1 && { echo "$u"; break; }; done')
+unit=${unit:-cri-docker.service}
+
 # Check 2: cri-dockerd service is active on node01
-state=$(sshq 'systemctl is-active cri-dockerd')
+state=$(sshq "systemctl is-active $unit")
 if [ "$state" = "active" ]; then
-  echo "PASS 2: cri-dockerd service is active on node01"
+  echo "PASS 2: $unit is active on node01"
 else
-  echo "FAIL 2: cri-dockerd service not active on node01 (state=${state:-unknown}, expected active)"
+  echo "FAIL 2: $unit not active on node01 (state=${state:-unknown}, expected active)"
   fail=1
 fi
 
 # Check 3: cri-dockerd service is enabled on node01
-enabled=$(sshq 'systemctl is-enabled cri-dockerd 2>/dev/null')
+enabled=$(sshq "systemctl is-enabled $unit 2>/dev/null")
 if [ "$enabled" = "enabled" ]; then
-  echo "PASS 3: cri-dockerd service is enabled on node01"
+  echo "PASS 3: $unit is enabled on node01"
 else
-  echo "FAIL 3: cri-dockerd service not enabled on node01 (got=${enabled:-unknown}, expected enabled)"
+  echo "FAIL 3: $unit not enabled on node01 (got=${enabled:-unknown}, expected enabled)"
   fail=1
 fi
 
@@ -57,21 +62,37 @@ else
   fail=1
 fi
 
-# Check 6: kubelet configured to use the cri-dockerd socket on node01
-cfg=$(sshq 'grep -h "cri-dockerd" /etc/kubernetes/kubelet.conf /etc/sysconfig/kubelet /etc/default/kubelet /var/lib/kubelet/config.yaml 2>/dev/null')
-if echo "$cfg" | grep -q "cri-dockerd"; then
-  echo "PASS 6: kubelet config on node01 points at the cri-dockerd socket"
+# Check 6: kubelet configured to use the cri-dockerd socket on node01.
+# On a kubeadm node the endpoint lives in /var/lib/kubelet/kubeadm-flags.env
+# (--container-runtime-endpoint=unix:///run/cri-dockerd.sock); the other
+# files are accepted for non-kubeadm layouts.
+cfg=$(sshq 'grep -h "cri-dockerd.sock" /var/lib/kubelet/kubeadm-flags.env /var/lib/kubelet/config.yaml /etc/default/kubelet /etc/sysconfig/kubelet /etc/systemd/system/kubelet.service.d/*.conf 2>/dev/null')
+if echo "$cfg" | grep -q "cri-dockerd.sock"; then
+  echo "PASS 6: kubelet config on node01 points at unix:///run/cri-dockerd.sock"
 else
-  echo "FAIL 6: kubelet config on node01 has no cri-dockerd endpoint (got=${cfg:-none})"
+  echo "FAIL 6: no kubelet config on node01 names /run/cri-dockerd.sock (checked kubeadm-flags.env, config.yaml, /etc/default/kubelet, kubelet.service.d) (got=${cfg:-none})"
   fail=1
 fi
 
-# Check 7: node01 is Ready
+# Check 7: kubelet on node01 really runs through cri-dockerd - the node
+# reports a docker:// runtime instead of containerd://
+runtime=$(kubectl get node node01 -o jsonpath='{.status.nodeInfo.containerRuntimeVersion}' 2>/dev/null)
+case "$runtime" in
+  docker://*)
+    echo "PASS 7: node01 reports container runtime $runtime (kubelet uses cri-dockerd)"
+    ;;
+  *)
+    echo "FAIL 7: node01 reports container runtime ${runtime:-unknown}, expected docker://... - restart kubelet after pointing it at cri-dockerd"
+    fail=1
+    ;;
+esac
+
+# Check 8: node01 is Ready
 ready=$(kubectl get node node01 -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}' 2>/dev/null)
 if [ "$ready" = "True" ]; then
-  echo "PASS 7: node01 is Ready"
+  echo "PASS 8: node01 is Ready"
 else
-  echo "FAIL 7: node01 not Ready (ready=${ready:-not found}, expected True)"
+  echo "FAIL 8: node01 not Ready (ready=${ready:-not found}, expected True)"
   fail=1
 fi
 

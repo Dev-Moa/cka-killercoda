@@ -1,7 +1,10 @@
 #!/bin/bash
 # 20-pod-security-standards: PSS labels on the three namespaces, the two
-# rejected privileged pods, and the audit-mode pod with its violation
-# annotations. Evidence-only output, also written to /tmp/check-report.txt.
+# rejected privileged pods, and the audit-mode pod that was allowed in.
+# (Audit mode writes pod-security.kubernetes.io/audit-violations into the
+# audit-log event, never onto the pod object, so the pod cannot be
+# checked for that annotation - only for having been admitted.)
+# Evidence-only output, also written to /tmp/check-report.txt.
 : > /tmp/check-report.txt
 exec > >(tee -a /tmp/check-report.txt) 2>&1
 
@@ -83,12 +86,24 @@ else
   fail=1
 fi
 
-# Check 10: a pod in exercise-20-audit carries the audit-violations annotation
-ann=$(kubectl get pods -n exercise-20-audit -o jsonpath='{.items[*].metadata.annotations.pod-security\.kubernetes\.io/audit-violations}' 2>/dev/null)
-if [ -n "$ann" ]; then
-  echo "PASS 10: a pod in exercise-20-audit has the pod-security.kubernetes.io/audit-violations annotation"
+# Check 10: exercise-20-audit does not ENFORCE restricted - task 7 asks for
+# restricted in audit mode only; with enforce=restricted the task 8 pod
+# would be rejected instead of allowed
+enforce=$(kubectl get ns exercise-20-audit -o jsonpath='{.metadata.labels.pod-security\.kubernetes\.io/enforce}' 2>/dev/null)
+if [ "$enforce" != "restricted" ]; then
+  echo "PASS 10: exercise-20-audit has no enforce=restricted label (enforce='${enforce:-none}')"
 else
-  echo "FAIL 10: no pod in exercise-20-audit has an audit-violations annotation"
+  echo "FAIL 10: exercise-20-audit enforces restricted - audit mode must only audit, remove the enforce label"
+  fail=1
+fi
+
+# Check 11: a pod was admitted in exercise-20-audit and is Running (task 8:
+# the violating pod succeeds in audit mode)
+phases=$(kubectl get pods -n exercise-20-audit -o jsonpath='{.items[*].status.phase}' 2>/dev/null)
+if echo "$phases" | grep -q Running; then
+  echo "PASS 11: a pod in exercise-20-audit is Running (allowed by audit mode)"
+else
+  echo "FAIL 11: no Running pod in exercise-20-audit (phases: ${phases:-none}) - audit mode must let the pod in"
   fail=1
 fi
 

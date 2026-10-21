@@ -74,7 +74,7 @@ k run priv-pod --image=nginx:1.28 --privileged -n exercise-20-baseline
 
 # Create audit namespace
 k create ns exercise-20-audit
-k label ns exercise-20-audit pod-security.kubernetes.io/enforce=restricted pod-security.kubernetes.io/audit=restricted
+k label ns exercise-20-audit pod-security.kubernetes.io/audit=restricted
 
 # Run pod in audit mode (should succeed but log violation)
 k run audit-pod --image=nginx:1.28 -n exercise-20-audit

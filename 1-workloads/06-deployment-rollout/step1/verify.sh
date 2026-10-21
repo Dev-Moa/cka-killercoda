@@ -1,6 +1,8 @@
 #!/bin/bash
 # Step 1: webapp is rolled back to nginx:1.28, healthy, with the strategy,
-# the change-cause annotation, and at least 3 rollout revisions.
+# the change-cause annotation, and at least 2 rollout revisions.
+# (create -> update -> undo leaves revisions 2 and 3: undo renumbers the
+# old ReplicaSet instead of adding a third row.)
 
 # 1. deployment webapp exists in exercise-06 with spec.replicas=3
 replicas=$(kubectl get deployment webapp -n exercise-06 -o jsonpath='{.spec.replicas}' 2>/dev/null)
@@ -44,12 +46,13 @@ ann=$(kubectl get deployment webapp -n exercise-06 -o jsonpath='{.metadata.annot
 }
 echo "kubernetes.io/change-cause annotation present on deployment webapp"
 
-# 6. rollout history has at least 3 revisions (create, update, rollback)
+# 6. rollout history has at least 2 revisions (after undo the history
+#    shows 2 and 3 - the rolled-back ReplicaSet takes the next number)
 count=$(kubectl rollout history deployment/webapp -n exercise-06 2>/dev/null | grep -cE '^[0-9]+[[:space:]]')
-if [ "${count:-0}" -ge 3 ]; then
-  echo "rollout history has $count revisions (>= 3)"
+if [ "${count:-0}" -ge 2 ]; then
+  echo "rollout history has $count revisions (>= 2)"
 else
-  echo "rollout history has only ${count:-0} revisions, expected >= 3 (update then rollback)"
+  echo "rollout history has only ${count:-0} revisions, expected >= 2 (update then rollback)"
   exit 1
 fi
 
