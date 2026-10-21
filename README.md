@@ -60,3 +60,23 @@ root on `controlplane`, `node01` reachable via `ssh node01`.
 | `w02-node-selectors-and-affinity/` | nodeSelector & node affinity |
 | `w03-daemonset/` | DaemonSet with control-plane toleration |
 | `w04-commands-and-arguments/` | command & args overrides |
+
+### `2-cluster-architecture/` — Domain 2: Cluster Architecture, Installation & Configuration
+
+| folder | exercise |
+| --- | --- |
+| `04-rbac/` | role, cluster role, bindings, service account |
+| `08-node-drain-cordon/` | cordon, drain, uncordon |
+| `09-kubeadm-upgrade/` | kubeadm cluster upgrade |
+| `13-helm-install-upgrade/` | helm install, upgrade, rollback |
+| `14-kustomize-overlays/` | kustomize base + overlay |
+| `18-cri-dockerd-setup/` | cri-dockerd runtime setup |
+| `20-pod-security-standards/` | Pod Security Standards labels |
+| `26-cri-dockerd-setup/` | cri-dockerd install (node01) |
+| `30-tls-configuration-update/` | TLS 1.2 config + restart |
+| `c01-etcd-backup-restore/` | etcd snapshot + restore |
+| `c02-crd-custom-resource/` | CRD + custom resource |
+| `c03-security-contexts/` | pod- and container-level security contexts |
+| `c04-kubeconfig/` | custom kubeconfig, context, fix |
+| `c05-kubeadm-install/` | rebuild the cluster: reset, init, join |
+| `c06-certificates-and-pki/` | view certs, CSR approve, new user |

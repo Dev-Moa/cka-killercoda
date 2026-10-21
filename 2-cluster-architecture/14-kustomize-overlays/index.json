@@ -1,0 +1,22 @@
+{
+  "title": "14 - Kustomize Overlays",
+  "description": "Build a Kustomize base and apply a staging overlay that changes namespace, replicas and labels.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Base and staging overlay",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

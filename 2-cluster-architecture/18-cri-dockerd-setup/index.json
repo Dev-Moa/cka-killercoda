@@ -1,0 +1,22 @@
+{
+  "title": "18 - CRI-dockerd Setup",
+  "description": "Install and configure cri-dockerd as a container runtime: kernel modules, sysctl, Docker, the binary, systemd units and the CRI socket.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Install and configure cri-dockerd",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

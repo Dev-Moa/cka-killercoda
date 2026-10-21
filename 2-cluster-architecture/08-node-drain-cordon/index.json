@@ -1,0 +1,27 @@
+{
+  "title": "08 - Node Drain and Cordon",
+  "description": "Take a worker node down for maintenance: cordon it, drain its pods, then uncordon it and scale back up.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Cordon and drain the worker node",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      },
+      {
+        "title": "Uncordon and scale back up",
+        "text": "step2/text.md",
+        "verify": "step2/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

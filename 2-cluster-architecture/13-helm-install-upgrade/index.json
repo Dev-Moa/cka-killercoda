@@ -1,0 +1,22 @@
+{
+  "title": "13 - Helm Install, Upgrade, and Rollback",
+  "description": "Install the Bitnami NGINX chart with Helm, upgrade replicaCount, then roll the release back.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Install, upgrade, and roll back",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

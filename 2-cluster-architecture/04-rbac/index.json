@@ -1,0 +1,22 @@
+{
+  "title": "04 - RBAC",
+  "description": "Create a Role, RoleBinding, ClusterRole and ClusterRoleBinding for a ServiceAccount, and verify access with kubectl auth can-i.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Create RBAC roles and bindings",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

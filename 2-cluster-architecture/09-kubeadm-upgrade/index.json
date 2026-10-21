@@ -1,0 +1,22 @@
+{
+  "title": "09 - kubeadm Upgrade",
+  "description": "Upgrade a two-node kubeadm cluster to the next minor version: control plane first with kubeadm upgrade apply, then the worker node after a drain.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Upgrade control plane and worker node",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

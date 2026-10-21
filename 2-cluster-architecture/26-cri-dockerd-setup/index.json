@@ -1,0 +1,22 @@
+{
+  "title": "26 - CRI-dockerd Setup",
+  "description": "Install cri-dockerd on node01 and point kubelet at the cri-dockerd socket.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Install and configure cri-dockerd",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

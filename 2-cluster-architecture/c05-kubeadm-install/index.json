@@ -1,0 +1,22 @@
+{
+  "title": "C05 - Kubeadm Install",
+  "description": "Rebuild the cluster from the node level: kubeadm init on the control plane, Flannel as the pod network, kubeadm join on node01, both nodes Ready and a test pod running.",
+  "details": {
+    "intro": {
+      "text": "intro.md"
+    },
+    "steps": [
+      {
+        "title": "Rebuild the cluster with kubeadm",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}
