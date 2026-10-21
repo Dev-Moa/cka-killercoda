@@ -2,7 +2,8 @@
 <summary>Solution</summary>
 
 ```yaml
-# arg-demo: args only — busybox CMD (sh) gets these as parameters
+# arg-demo: args only — busybox has no ENTRYPOINT, so the args are the
+# whole command
 apiVersion: v1
 kind: Pod
 metadata:
@@ -11,7 +12,7 @@ spec:
   containers:
   - name: busybox
     image: busybox
-    args: ["-c", "sleep 3600"]
+    args: ["sleep", "3600"]
 ```
 
 ```yaml

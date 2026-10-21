@@ -10,8 +10,9 @@ phrases it as "make this busybox pod sleep 3600".
 Work in the `default` namespace.
 
 1. Create a pod named `arg-demo` with image `busybox`. Use only
-   `args` so the container runs `sleep 3600` (busybox starts `sh`, so
-   the args override its CMD). The pod must stay Running.
+   `args` so the container runs `sleep 3600` — busybox has no
+   ENTRYPOINT, so with `args` alone they become the whole command. The
+   pod must stay Running.
 2. Create a pod named `cmd-demo` with image `busybox`. Use `command`
    and `args` so it runs `sleep 120` — the command replaces the
    image's default program entirely.
