@@ -14,6 +14,8 @@ Unlike Deployments where pod identity doesn't matter, StatefulSets maintain iden
 
 ## Tasks
 
+Work in the `default` namespace.
+
 1. Create a headless Service for the StatefulSet (required for DNS routing)
 2. Create a StatefulSet with 3 replicas using the `nginx:1.28` image
 3. Verify pods start in order (mysql-0 first, then mysql-1, then mysql-2)

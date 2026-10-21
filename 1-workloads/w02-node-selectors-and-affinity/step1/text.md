@@ -6,6 +6,8 @@ they go under `template.spec`.
 
 ## Tasks
 
+Work in the `default` namespace.
+
 Pick one worker node. Call it `<worker>` below.
 
 1. List the labels on `<worker>`.

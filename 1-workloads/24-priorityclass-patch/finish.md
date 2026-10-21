@@ -12,10 +12,10 @@ k create ns exercise-24
 kn exercise-24
 
 # Create PriorityClass
-k create priorityclass high-priority --value=999999 --description="Critical workload"
+k create priorityclass critical-priority --value=999999 --description="Critical workload"
 
 # Verify it was created
-k get priorityclass high-priority
+k get priorityclass critical-priority
 
 # Create deployment WITHOUT priorityClassName
 k create deployment critical-app --image=busybox:1.36 --replicas=1 $do > deploy.yaml
@@ -25,32 +25,32 @@ k apply -f deploy.yaml
 
 # Now patch the deployment to add priorityClassName
 # Target: spec.template.spec.priorityClassName
-k patch deployment critical-app -p '{"spec":{"template":{"spec":{"priorityClassName":"high-priority"}}}}'
+k patch deployment critical-app -p '{"spec":{"template":{"spec":{"priorityClassName":"critical-priority"}}}}'
 
 # Verify patch was applied
 k get deploy critical-app -o jsonpath='{.spec.template.spec.priorityClassName}'
-# Output: high-priority
+# Output: critical-priority
 
 # The pod will be recreated with the new priority class
 k get pods -n exercise-24
 
 # Verify pod has it
 k get pod -n exercise-24 -o jsonpath='{.items[0].spec.priorityClassName}'
-# Output: high-priority
+# Output: critical-priority
 
 # Check priority value
-k get priorityclass high-priority -o jsonpath='{.value}'
+k get priorityclass critical-priority -o jsonpath='{.value}'
 # Output: 999999
 
 # Cleanup
 k delete ns exercise-24
-k delete priorityclass high-priority
+k delete priorityclass critical-priority
 ```
 
 Alternative patch with explicit field path (if JSON patch fails):
 
 ```bash
-k patch deployment critical-app --type='json' -p='[{"op": "add", "path": "/spec/template/spec/priorityClassName", "value":"high-priority"}]'
+k patch deployment critical-app --type='json' -p='[{"op": "add", "path": "/spec/template/spec/priorityClassName", "value":"critical-priority"}]'
 ```
 
 </details>

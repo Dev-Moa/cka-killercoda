@@ -12,6 +12,8 @@ On the exam, you'll create PriorityClasses and assign them to pods. You need to 
 
 ## Tasks
 
+Work in the `default` namespace.
+
 1. Create a PriorityClass named `high-priority` with value 1000 and preemptionPolicy set to `PreemptLowerPriority`.
 
 2. Create a PriorityClass named `low-priority` with value 10 and preemptionPolicy set to `Never`.

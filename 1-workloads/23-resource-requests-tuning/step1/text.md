@@ -5,11 +5,9 @@ Debug and fix a Deployment where pods won't schedule due to insufficient resourc
 ## Tasks
 
 1. Create a namespace called `exercise-23`
-2. Create a Deployment with:
-   - 3 replicas
-   - Image: `nginx:1.27`
-   - Resource requests: 512Mi memory, 500m CPU (intentionally too high)
-   - Cluster has 2 nodes with limited resources
+2. A Deployment named `web` already exists in `exercise-23` with 3
+   replicas and image `nginx:1.27` — its requests are set to impossible
+   values (100Gi memory, 100 CPU), so every pod is Pending.
 3. Observe pods pending — they won't schedule
 4. Check node capacity and available resources
 5. Calculate correct resource requests to fit 3 replicas
