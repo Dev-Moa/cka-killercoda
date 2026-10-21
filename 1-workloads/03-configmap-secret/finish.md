@@ -1,14 +1,55 @@
-# ConfigMap & Secret - done
+## What tripped me up
 
-The exam facts from this exercise:
+> I referenced a ConfigMap name that didn't exist yet (`app-conf` instead of `app-config` — typo). The pod went into `CreateContainerConfigError` and I spent 3 minutes staring at the YAML before checking `k describe pod` events. The event message says exactly which ConfigMap is missing. Check events first, always.
+>
+> Also confused `envFrom` vs `env.valueFrom`. `envFrom` loads ALL keys from a ConfigMap/Secret as env vars. `env.valueFrom.configMapKeyRef` loads a single key. On the exam, if the question says "load all keys," use `envFrom`. If it says "load KEY_X as MY_VAR," use `valueFrom`. Getting them backwards doesn't error — you just get wrong variable names.
 
-- `kubectl create configmap app-config --from-literal=APP_MODE=production` makes a ConfigMap in one command — no YAML needed.
-- Secrets work the same way: `kubectl create secret generic db-creds --from-literal=DB_USER=admin`.
-- `envFrom` loads ALL keys from a ConfigMap/Secret as env vars. `env.valueFrom.configMapKeyRef` loads ONE key. Getting them backwards gives wrong variable names, not an error.
-- Mount a whole ConfigMap as files with a `volumes` entry plus `volumeMounts` at `/etc/config` — every key becomes a file.
-- Pod stuck in `CreateContainerConfigError`? Check `kubectl describe pod` events first — the event names the missing ConfigMap or Secret (a typo like `app-conf` is the usual cause).
-- Verify inside the pod: `kubectl exec app -n exercise-03 -- env` and `kubectl exec app -n exercise-03 -- ls /etc/config/`.
+<details>
+<summary>Solution</summary>
 
-The exercise is based on the ConfigMap and Secret notes in
-`notes/4-application-lifecycle-management/38` and `39`, and exercise 03
-in `cka-prep/exercises/1-workloads/`.
+```bash
+k create ns exercise-03
+
+k create configmap app-config -n exercise-03 \
+  --from-literal=APP_MODE=production \
+  --from-literal=LOG_LEVEL=debug
+
+k create secret generic db-creds -n exercise-03 \
+  --from-literal=DB_USER=admin \
+  --from-literal=DB_PASS=s3cretP@ss
+```
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+  namespace: exercise-03
+spec:
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: ["sleep", "3600"]
+    envFrom:
+    - configMapRef:
+        name: app-config
+    - secretRef:
+        name: db-creds
+    volumeMounts:
+    - name: config-vol
+      mountPath: /etc/config
+  volumes:
+  - name: config-vol
+    configMap:
+      name: app-config
+```
+
+```bash
+k apply -f app.yaml
+
+# Verify
+k exec app -n exercise-03 -- env | grep -E "APP_MODE|LOG_LEVEL|DB_USER|DB_PASS"
+k exec app -n exercise-03 -- ls /etc/config/
+```
+
+</details>

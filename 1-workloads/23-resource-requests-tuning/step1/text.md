@@ -1,31 +1,53 @@
-# Resource requests tuning
+# Exercise 23 — Resource Requests Tuning (Pods Won't Schedule)
 
-Resource requests decide where a pod can run: the scheduler only
-places a pod on a node that has the requested memory and CPU free.
-When requests are set too high, pods stay Pending even though they
-would actually use very little. The fix is to check the node's real
-Allocatable capacity, then lower the requests until all replicas fit.
-The exam trick: never apply a fixed overhead rule — calculate from
-what the node actually has free.
+Debug and fix a Deployment where pods won't schedule due to insufficient resource requests. Learn to calculate proper requests based on node capacity.
 
-A Deployment named `web` in namespace `exercise-23` has 3 replicas,
-but every pod is Pending. The resource requests were set to impossible
-values on purpose, so no node can fit them. Diagnose the failure, then
-lower the requests so all 3 pods schedule and run. Keep the nginx
-image.
+## Tasks
 
-1. Describe one Pending pod in namespace `exercise-23` and read its
-   Events — which resource is insufficient?
+1. Create a namespace called `exercise-23`
+2. Create a Deployment with:
+   - 3 replicas
+   - Image: `nginx:1.27`
+   - Resource requests: 512Mi memory, 500m CPU (intentionally too high)
+   - Cluster has 2 nodes with limited resources
+3. Observe pods pending — they won't schedule
+4. Check node capacity and available resources
+5. Calculate correct resource requests to fit 3 replicas
+6. Update Deployment with new (lower) requests
+7. Verify all 3 pods schedule and run
+8. Document the calculation
 
-2. Describe a node and compare its Allocatable capacity with what the
-   pods request.
+## Hints
 
-3. Update the Deployment `web` with realistic memory and CPU requests.
+<details>
+<summary>Stuck? Click to reveal hints</summary>
 
-4. Verify all 3 pods are Running.
+- `k get nodes` → see available nodes
+- `k describe node <node>` → see Allocatable and Allocated resources
+- `k top nodes` → see actual usage
+- If pods are Pending: `k describe pod <pod>` → check Events for "Insufficient memory"
+- Start with 100m CPU and 64Mi memory per replica, then adjust based on errors
+- Reduce requests incrementally until all 3 pods schedule
 
-Remember: a request is a promise the scheduler must keep — if a pod
-asks for more than a node can give, it stays Pending no matter how
-little it actually uses.
+</details>
 
-When all 3 pods are Running, click **CHECK**.
+## Verify
+
+```bash
+# Should see Pending pods with reason "Insufficient memory/cpu"
+k get pods -n exercise-23
+
+# Check why pods won't schedule
+k describe pod <pod-name> -n exercise-23
+
+# Check node capacity
+k describe node <node-name>
+
+# After fix — all 3 should be Running
+k get pods -n exercise-23
+
+# Check actual resource usage (much lower than requests)
+k top pods -n exercise-23
+```
+
+When done, click **CHECK**.

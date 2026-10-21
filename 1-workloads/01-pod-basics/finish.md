@@ -1,17 +1,56 @@
-# Pod Basics - done
+## What tripped me up
 
-The exam facts from this exercise:
+> I created the pod in `default` the first time because I forgot `-n exercise-01` on the `k apply`. Zero points — the grader checks the exact namespace. Now I always run `kn <namespace>` before touching anything. Cost me 4 minutes the first time.
+>
+> Also: I kept trying to add resources directly in `k run`. You can't. You have to generate the YAML with `$do`, edit it, then apply. Don't fight the CLI — just redirect to a file.
 
-- Always set the namespace first: `kubectl config set-context --current
-  --namespace exercise-01`. A pod created in `default` scores zero points.
-- `kubectl run` cannot set resources. Generate the YAML with `kubectl run
-  web --image=nginx:1.27 --labels=app=web,tier=frontend --dry-run=client
-  -o yaml > web.yaml`, edit it, then apply.
-- Resources go under `spec.containers[0].resources`: requests `64Mi`
-  memory and `100m` CPU, limits `128Mi` memory and `250m` CPU.
-- Add a label to a running pod: `kubectl label pod web version=v1`.
-- Remove a label with a minus suffix: `kubectl label pod web tier-`.
-- Check labels and IP: `kubectl get pod web --show-labels` and
-  `kubectl get pod web -o wide`.
+<details>
+<summary>Solution</summary>
 
-The exercise is based on exercise 01 in `cka-prep/exercises/1-workloads/`.
+```bash
+# Create namespace
+k create ns exercise-01
+
+# Generate pod YAML
+k run web -n exercise-01 --image=nginx:1.28 --labels=app=web,tier=frontend $do > pod.yaml
+```
+
+Edit `pod.yaml` to add resources:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  namespace: exercise-01
+  labels:
+    app: web
+    tier: frontend
+spec:
+  containers:
+  - name: web
+    image: nginx:1.27
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "250m"
+```
+
+```bash
+k apply -f pod.yaml
+
+# Verify
+k get pod web -n exercise-01 --show-labels
+k get pod web -n exercise-01 -o wide
+
+# Add label
+k label pod web -n exercise-01 version=v1
+
+# Remove label
+k label pod web -n exercise-01 tier-
+```
+
+</details>

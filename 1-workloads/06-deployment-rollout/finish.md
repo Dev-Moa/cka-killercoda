@@ -1,13 +1,76 @@
-# Deployment Rollout - done
+## What tripped me up
 
-The exam facts from this exercise:
+> I used `--record` on every deployment command because that's what older guides taught. It's deprecated and removed in v1.35 — the CHANGE-CAUSE column shows `<none>`. The correct way: annotate the deployment with `kubernetes.io/change-cause` after each change. It's one extra command but it actually works.
+>
+> Also: I forgot that `k rollout undo` creates a NEW revision, not a revert. After undo, I had revision 1, 3 (not 1, 2). My history looked weird and I thought something broke. That's just how it works — undo creates revision N+1 with the old spec.
+>
+> **Why `--overwrite` on the second annotation?** The `kubernetes.io/change-cause` annotation lives on the Deployment object itself, not on individual revisions. When you update the image, the Deployment object remains the same. The old annotation persists, so you need `--overwrite` to change its value. First annotation (initial deploy) doesn't need it because the key doesn't exist yet. Second annotation (after update) needs it because the key already exists. Without `--overwrite`, the command would error with "annotation already exists".
 
-- `--record` is removed from kubectl — it no longer fills the CHANGE-CAUSE column.
-- Use the `kubernetes.io/change-cause` annotation on the Deployment instead.
-- The annotation lives on the Deployment object, not on each revision, so the second annotate needs `--overwrite` or it fails with "annotation already exists".
-- `kubectl rollout undo` creates a NEW revision with the old spec — after an undo the history shows revisions 1 and 3, not 1 and 2.
-- `kubectl set image deployment/webapp nginx=nginx:1.29 -n exercise-06` updates the image.
-- `kubectl rollout status deployment/webapp -n exercise-06` waits for the rollout to finish.
-- `kubectl rollout history deployment/webapp -n exercise-06` lists the revisions; `kubectl rollout undo` rolls back one revision.
+<details>
+<summary>Solution</summary>
 
-The exercise is based on the rolling updates and rollbacks note in `notes/4-application-lifecycle-management/35` and exercise 06 in `cka-prep/exercises/1-workloads/`.
+```bash
+k create ns exercise-06
+
+# Create deployment
+k create deployment webapp -n exercise-06 --image=nginx:1.28 --replicas=3 $do > deploy.yaml
+```
+
+Edit `deploy.yaml` to add rolling update strategy, then apply:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  namespace: exercise-06
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapp
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.28
+```
+
+```bash
+k apply -f deploy.yaml
+# First annotation — no --overwrite needed because the key doesn't exist yet
+k annotate deployment webapp -n exercise-06 kubernetes.io/change-cause="initial deploy nginx:1.28"
+
+# Verify
+k get deploy webapp -n exercise-06
+k get pods -n exercise-06
+
+# Update image
+k set image deployment/webapp nginx=nginx:1.29 -n exercise-06
+# Second annotation — MUST use --overwrite because kubernetes.io/change-cause already exists on the Deployment object
+# The annotation key lives on the Deployment, not on individual revisions, so it persists across updates
+k annotate deployment webapp -n exercise-06 kubernetes.io/change-cause="update to nginx:1.29" --overwrite
+
+# Watch rollout
+k rollout status deployment/webapp -n exercise-06
+
+# Check history
+k rollout history deployment/webapp -n exercise-06
+
+# Rollback
+k rollout undo deployment/webapp -n exercise-06
+
+# Verify rollback
+k get deploy webapp -n exercise-06 -o jsonpath='{.spec.template.spec.containers[0].image}'
+# Should output: nginx:1.28
+```
+
+</details>

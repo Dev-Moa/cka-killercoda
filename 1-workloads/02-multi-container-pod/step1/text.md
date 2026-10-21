@@ -1,34 +1,41 @@
-A native sidecar (v1.35) is an init container with
-`restartPolicy: Always`: it starts before the main container and keeps
-running next to it for the pod's whole life. Here one container writes
-a log line every 3 seconds and the sidecar tails the same file through
-a shared `emptyDir` volume — the classic sidecar logging pattern the
-exam tests. The trap: the sidecar must go in `initContainers`, not
-`containers`, or it loses its start-order guarantee.
+# Exercise 02 — Multi-Container Pod (Sidecar Logging)
 
-Create a pod with a main container and a native sidecar that tails the
-main container's log file.
+Create a pod with a main container and a sidecar container that tails the main container's log file. This uses the v1.35 native sidecar container feature (`restartPolicy: Always` on an init container).
 
-1. Create a namespace called `exercise-02`.
+## Tasks
 
-2. Create a pod named `logger` in the `exercise-02` namespace with:
+1. Create a namespace called `exercise-02`
+2. Create a pod named `logger` in namespace `exercise-02` with:
+   - An init container (sidecar) named `log-agent` using `busybox:1.36`
+     - Set `restartPolicy: Always` on the init container to make it a native sidecar
+     - Command: `tail -F /var/log/app/app.log` (capital F waits for file creation)
+     - Mount a shared volume at `/var/log/app`
+   - A main container named `app` using `busybox:1.36`
+     - Command: write a line to `/var/log/app/app.log` every 3 seconds
+     - Mount the same shared volume at `/var/log/app`
+   - Use an `emptyDir` volume named `log-volume`
+3. Verify both containers are running
+4. Check the sidecar's logs to see the streamed output
 
-   - A native sidecar: an init container named `log-agent` using
-     `busybox:1.36` with `restartPolicy: Always`, command
-     `tail -F /var/log/app/app.log` (capital F waits for the file to
-     appear), and a shared volume mounted at `/var/log/app`
-   - A main container named `app` using `busybox:1.36` that writes a
-     line to `/var/log/app/app.log` every 3 seconds and mounts the
-     same shared volume at `/var/log/app`
-   - An `emptyDir` volume named `log-volume` shared by both containers
+## Hints
 
-3. Verify both containers are running (READY 2/2).
+<details>
+<summary>Stuck? Click to reveal hints</summary>
 
-4. Check the sidecar's logs with
-   `kubectl logs logger -n exercise-02 -c log-agent`{{exec}} — you
-   should see the streamed output.
+- Native sidecars in v1.35: put the sidecar in `initContainers` with `restartPolicy: Always`
+- The sidecar starts before the main container and keeps running alongside it
+- Shared volume: both containers mount the same `emptyDir`
 
-If CHECK fails without showing why, read the full report:
-`cat /tmp/check-report.txt`{{exec}}
+</details>
+
+## Verify
+
+```bash
+# Both containers should be Running (READY 2/2)
+k get pod logger -n exercise-02
+
+# Should see the log lines from the app container
+k logs logger -n exercise-02 -c log-agent
+```
 
 When done, click **CHECK**.

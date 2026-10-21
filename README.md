@@ -25,15 +25,15 @@ labs host everything else. One folder = one scenario.
 
 See https://killercoda.com/creators for the full docs.
 
-Rule: step texts carry the question only — Context paragraph plus the
-requirements verbatim. No solution manifests, patch commands, or answer
-blocks of any kind (`{{exec}}` only on commands the question text itself
-contains). The CHECK script is the grader; the exam facts in `finish.md`
-are shown only after the exercise is done.
+Rule: the step text is a verbatim copy of the exercise's own file
+(`CKA-Certified-Kubernetes-Administrator/exercises/<id>/README.md`, or
+`cka-prep/exercises/...` for the W exercises): Context/Tasks/Hints/
+Verify into the step, What tripped me up + Solution into `finish.md`,
+and only a `When done, click **CHECK**.` line added. No rewording, no
+invented prose, no `{{exec}}`/`{{copy}}` decorations.
 Validators check objects and specs only — port the exercise's Verify
-section (CKA-Certified-Kubernetes-Administrator/exercises) and the
-question's graded fields. Never assert on log text or other free-form
-content the candidate writes.
+section and the graded fields. Never assert on log text or other
+free-form content the candidate writes.
 
 ## Scenarios
 

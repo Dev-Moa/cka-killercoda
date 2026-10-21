@@ -1,20 +1,48 @@
-# Multi-container Pod - done
+## What tripped me up
 
-The exam facts from this exercise:
+> First attempt: I put the sidecar in `containers` instead of `initContainers`. It ran, but it wasn't a native sidecar — it started alongside the main container with no ordering guarantee. The whole point of native sidecars (v1.35) is that they start *before* the main container and keep running. Has to be `initContainers` + `restartPolicy: Always`.
+>
+> Second mistake: the `tail -f` command failed silently because the log file didn't exist yet. The sidecar starts first (native sidecar starts before main container), before the app container writes anything. The log file is created by the app container, so the sidecar must use `tail -F` (capital F) which waits for the file to appear and follows it through rotations.
 
-- A native sidecar (v1.35) is an **initContainer** with
-  `restartPolicy: Always` — it starts before the main container and
-  keeps running next to it.
-- Put the sidecar in `initContainers`, not `containers`: in
-  `containers` it runs with no start-order guarantee and is not a
-  native sidecar.
-- Use `tail -F` (capital F), not `tail -f`: the sidecar starts before
-  the app creates the log file, and `-F` waits for the file to appear.
-- Both containers mount the same `emptyDir` volume named `log-volume`
-  at `/var/log/app`, so the sidecar reads what the app writes.
-- Verify with `kubectl get pod logger -n exercise-02` (READY `2/2`)
-  and `kubectl logs logger -n exercise-02 -c log-agent` (streamed
-  lines).
+<details>
+<summary>Solution</summary>
 
-The exercise is based on exercise 02 in
-`cka-prep/exercises/1-workloads/`.
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: logger
+  namespace: exercise-02
+spec:
+  initContainers:
+  - name: log-agent
+    image: busybox:1.37
+    restartPolicy: Always
+    command: ["sh", "-c", "tail -F /var/log/app/app.log"]
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/log/app
+  containers:
+  - name: app
+    image: busybox:1.37
+    command: ["sh", "-c", "while true; do echo \"$(date) - app running\" >> /var/log/app/app.log; sleep 3; done"]
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/log/app
+  volumes:
+  - name: log-volume
+    emptyDir: {}
+```
+
+```bash
+k create ns exercise-02
+k apply -f logger.yaml
+
+# Wait for pod to be ready
+k get pod logger -n exercise-02 -w
+
+# Check sidecar logs
+k logs logger -n exercise-02 -c log-agent
+```
+
+</details>

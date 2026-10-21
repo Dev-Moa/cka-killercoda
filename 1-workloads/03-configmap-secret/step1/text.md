@@ -1,28 +1,45 @@
-# Create the ConfigMap, Secret and pod
+# Exercise 03 — ConfigMap and Secret
 
-A ConfigMap stores non-secret configuration as key-value pairs, and a
-Secret stores sensitive data such as passwords. A pod can consume both
-in two ways: as environment variables, or as files mounted into a
-container. Creating these objects and injecting them into a pod is one
-of the most common CKA tasks, so learn the flow end to end.
+Create ConfigMaps and Secrets, then inject them into a pod as environment variables and mounted files.
 
-1. Create a namespace called `exercise-03`.
+## Tasks
 
-2. Create a ConfigMap named `app-config` in the `exercise-03` namespace
-   with `APP_MODE=production` and `LOG_LEVEL=debug`.
-
-3. Create a Secret named `db-creds` in the `exercise-03` namespace with
-   `DB_USER=admin` and `DB_PASS=s3cretP@ss`.
-
-4. Create a pod named `app` in the `exercise-03` namespace using
-   `busybox:1.36` with the command `sleep 3600` that:
-
-   - Loads all keys from the ConfigMap as environment variables
-   - Loads all keys from the Secret as environment variables
+1. Create a namespace called `exercise-03`
+2. Create a ConfigMap named `app-config` with:
+   - Key `APP_MODE` = `production`
+   - Key `LOG_LEVEL` = `debug`
+3. Create a Secret named `db-creds` with:
+   - Key `DB_USER` = `admin`
+   - Key `DB_PASS` = `s3cretP@ss`
+4. Create a pod named `app` that:
+   - Uses image `busybox:1.36`, command `sleep 3600`
+   - Loads `APP_MODE` and `LOG_LEVEL` from the ConfigMap as env vars
+   - Loads `DB_USER` and `DB_PASS` from the Secret as env vars
    - Mounts the entire ConfigMap as files at `/etc/config/`
+5. Verify the env vars are set inside the pod
+6. Verify the mounted files exist at `/etc/config/`
 
-5. Verify the environment variables are set inside the pod.
+## Hints
 
-6. Verify the mounted files exist at `/etc/config/`.
+<details>
+<summary>Stuck? Click to reveal hints</summary>
+
+- `k create configmap app-config --from-literal=APP_MODE=production --from-literal=LOG_LEVEL=debug`
+- `k create secret generic db-creds --from-literal=DB_USER=admin --from-literal=DB_PASS=s3cretP@ss`
+- Use `envFrom` to load all keys from a ConfigMap or Secret
+- Use `volumes` + `volumeMounts` to mount ConfigMap as files
+
+</details>
+
+## Verify
+
+```bash
+# Check env vars
+k exec app -n exercise-03 -- env | grep -E "APP_MODE|LOG_LEVEL|DB_USER|DB_PASS"
+
+# Check mounted files
+k exec app -n exercise-03 -- ls /etc/config/
+k exec app -n exercise-03 -- cat /etc/config/APP_MODE
+```
 
 When done, click **CHECK**.

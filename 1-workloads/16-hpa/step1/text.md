@@ -1,42 +1,97 @@
-# Create the deployment, service, and HPA
+# Exercise 16 — Horizontal Pod Autoscaler
 
-HPA (Horizontal Pod Autoscaler) scales the number of replicas based on
-metrics like CPU or memory: when CPU use goes above the target, it
-creates more pods; when load drops, it removes pods. VPA (Vertical Pod
-Autoscaler) adjusts the CPU and memory requests of existing pods
-instead — it does not scale replicas. The CKA focuses on HPA, so this
-exercise is about a Deployment with a CPU request and an HPA that
-scales it on CPU utilization.
+Configure a Horizontal Pod Autoscaler to scale a deployment based on CPU usage. Also understand Vertical Pod Autoscaler for resource optimization. This requires the metrics-server to be installed in the cluster.
 
-The `exercise-16` namespace already exists. Do all work in it.
+## Context: HPA vs VPA
 
-1. Verify the metrics-server works:
+## Context: HPA vs VPA
 
-   `kubectl top nodes`{{exec}}
+HPA (Horizontal Pod Autoscaler) scales the number of replicas based on metrics like CPU or memory. When CPU exceeds target, HPA creates more pods. When load drops, it removes pods.
 
-   It should return data. It may take about a minute after the cluster
-   starts. The HPA needs it.
+VPA (Vertical Pod Autoscaler) adjusts the CPU and memory requests/limits for existing pods based on actual usage. If a pod requests 256Mi memory but only uses 64Mi, VPA recommends lowering the request. This doesn't scale replicas; it optimizes resource allocation to improve bin-packing and reduce waste.
 
-2. Create a Deployment named `load-app` in `exercise-16` with `1`
-   replica, image `nginx:1.27`, CPU request `50m`, and CPU limit `100m`.
+The CKA focuses on HPA, but understanding VPA helps with cluster resource efficiency.
 
-3. Expose the Deployment with a ClusterIP Service named `load-svc` on
-   port `80`.
+## Tasks (HPA)
 
-4. Create a HorizontalPodAutoscaler named `load-app` targeting
-   Deployment `load-app`: minReplicas `1`, maxReplicas `5`, target CPU
-   utilization `50%`. The target MUST be `type: Utilization` with
-   `averageUtilization: 50` - do NOT use `AverageValue`.
+1. Create a namespace called `exercise-16`
+2. Verify the metrics-server is running in the cluster
+3. Create a Deployment named `load-app` with:
+   - Image: `registry.k8s.io/hpa-example` (or `nginx:1.27` with resource requests)
+   - 1 replica
+   - CPU request: 50m
+   - CPU limit: 100m
+4. Expose it with a ClusterIP Service named `load-svc` on port 80
+5. Create an HPA targeting `load-app`:
+   - Min replicas: 1
+   - Max replicas: 5
+   - **Target CPU utilization: 50%** (must be specified as `type: Utilization` with `averageUtilization: 50`)
+6. Verify the HPA YAML has correct structure (target type is `Utilization`, not `AverageValue`)
+7. Generate load against the service and observe the HPA scaling up
+8. Stop the load and observe the HPA scaling back down
 
-5. Check the HPA YAML to confirm the metric target type is
-   `Utilization`.
+## Hints
 
-6. Generate load against the service (for example a busybox pod running
-   `while true; do wget -q -O- http://load-svc.exercise-16; done`) and
-   watch the HPA scale up. Metrics take about a minute to appear, and
-   scale-down after the load stops is slow on purpose (about 5 minutes)
-   - do not wait for it.
+<details>
+<summary>Stuck? Click to reveal hints</summary>
 
-7. Stop the load when you are done.
+- `k top pods -n exercise-16` to check if metrics-server is working
+- `k autoscale deployment load-app --cpu-percent=50 --min=1 --max=5` creates a basic HPA
+- **Verify HPA structure:** After creating the HPA, run `k get hpa -n exercise-16 -o yaml` and check that:
+  - `spec.metrics[0].type` == `Resource`
+  - `spec.metrics[0].resource.target.type` == `Utilization` (not `AverageValue`)
+  - `spec.metrics[0].resource.target.averageUtilization` == 50
+- Load generation: `k run load-gen --image=busybox:1.36 --rm -it -- sh -c "while true; do wget -q -O- http://load-svc.exercise-16; done"`
+- Scale down takes a few minutes after load stops (by design, to avoid flapping)
+
+**HPA Pre-Flight Checklist (Reddit: This solves 80% of HPA issues)**
+```bash
+# 1. Is metrics-server running?
+k get deployment -n kube-system metrics-server
+# If not running: might be missing from cluster; install via init-cluster.sh
+
+# 2. Does `kubectl top` work?
+k top nodes
+k top pods -n exercise-16
+# If "metrics not available": wait 60 seconds (metrics collection delay)
+
+# 3. Does Deployment have resource requests?
+k get deployment load-app -n exercise-16 -o json | jq '.spec.template.spec.containers[0].resources'
+# Must show: "requests": {"cpu": "50m"} (or similar value)
+# If empty {}: **This is why HPA shows <unknown>**, add requests to deployment
+
+# 4. Is HPA watching the right target.type?
+k get hpa -n exercise-16 -o yaml | grep -A5 "metrics:"
+# Must show: type: Utilization (NOT AverageValue or cpu)
+# If wrong: recreate HPA with: k autoscale deployment load-app --cpu-percent=50
+
+# 5. Is HPA showing valid metrics?
+k get hpa -n exercise-16
+# Should show: TARGETS "X%/50%" or "100m/50m"
+# If "unknown/50%": problem is Deployment has no resource.requests
+```
+
+**Target Type vs. Target Value (Commonly Confused)**
+- `type: Utilization` + `averageUtilization: 50` = Scale when 50% of *requested* CPU in use
+  - Example: Pod requests 100m CPU, use 50m → 50% = scale trigger
+  - **This is what most exams test**
+- `type: Value` + `averageValue: 50m` = Scale when average pod uses exactly 50m CPU
+  - Less common; requires knowing absolute metrics in advance
+- **Exam gotcha:** Using `type: Value` when question implies `Utilization` → HPA never scales
+
+</details>
+
+## Verify
+
+```bash
+# HPA created
+k get hpa -n exercise-16
+
+# Under load: replicas should increase
+k get hpa -n exercise-16 -w
+
+# Pods scaling
+k get pods -n exercise-16 -w
+```
 
 When done, click **CHECK**.

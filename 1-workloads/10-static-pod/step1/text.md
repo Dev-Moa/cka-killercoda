@@ -1,25 +1,36 @@
-# Create the static pod
+# Exercise 10 — Static Pod
 
-Create a static pod by placing a manifest in the kubelet's static pod
-directory. Static pods are managed directly by the kubelet, not the API
-server. You create the manifest yourself and place it in that directory.
+Create a static pod by placing a manifest in the kubelet's static pod directory. Static pods are managed directly by the kubelet, not the API server.
 
-1. Find the kubelet's static pod directory:
+## Tasks
 
-   `cat /var/lib/kubelet/config.yaml | grep staticPodPath`{{exec}}
+1. Find the static pod manifest directory on the node
+2. Create a static pod manifest file for a pod named `static-web` with:
+   - Image: `nginx:1.27`
+   - Port: 80
+3. Verify the static pod appears in `k get pods` (it will have the node name appended)
+4. Try to delete the static pod with `kubectl` — observe what happens
 
-2. Create a manifest file in that directory for a pod named
-   `static-web`:
+## Hints
 
-   - image `nginx:1.27`
-   - containerPort `80`
+<details>
+<summary>Stuck? Click to reveal hints</summary>
 
-3. Wait a few seconds, then check the pod appears:
+- The static pod path is configured in the kubelet config, usually `/etc/kubernetes/manifests/`
+- Check kubelet config: `cat /var/lib/kubelet/config.yaml | grep staticPodPath`
+- Static pods show up in `kubectl` but can't be deleted through the API — the kubelet recreates them
+- The pod name will be `static-web-<node-name>`
 
-   `kubectl get pods | grep static-web`{{exec}}
+</details>
 
-   The pod name gets the node name appended.
+## Verify
 
-4. Try to delete the pod with kubectl and observe what happens.
+```bash
+# Should show static-web-<node>
+k get pods -A | grep static-web
 
-When the pod is Running, click **CHECK**.
+# Describe should show the static pod
+k describe pod static-web-<node> -n default
+```
+
+When done, click **CHECK**.

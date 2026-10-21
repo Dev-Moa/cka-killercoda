@@ -1,28 +1,85 @@
-# Node selectors and affinity - done
+<details>
+<summary>Solution</summary>
 
-The exam facts from this exercise:
+```bash
+# 1. labels on the node
+kubectl get node <worker> --show-labels
 
-- `nodeSelector` is one label with one value. In a pod it sits under
-  `spec`; in a Deployment, under `spec.template.spec`.
-- Node affinity adds operators: `In` (one of these values), `NotIn`
-  (none of these), `Exists` (label present, any value).
-- `requiredDuringSchedulingIgnoredDuringExecution` keeps the pod
-  Pending when no node matches; `preferred...` only tries, then
-  places the pod anywhere. `IgnoredDuringExecution` means a label
-  change later does not move a running pod.
-- Do not type the affinity block: copy it from the docs page "Assign
-  Pods to Nodes using Node Affinity", then change key, operator, and
-  values.
-- The control plane node has the label
-  `node-role.kubernetes.io/control-plane` with an empty value — match
-  it with the `Exists` operator.
-- Pods only land on the control plane node if they tolerate its taint
-  `node-role.kubernetes.io/control-plane:NoSchedule`.
-- Core commands: `kubectl label nodes <node> key=value`,
-  `kubectl get nodes --show-labels`, `kubectl get pods -o wide`,
-  `kubectl create deployment blue --image=nginx --replicas=3`,
-  `kubectl edit deployment blue`.
+# 2. label it
+kubectl label nodes <worker> size=Large
 
-The exercise is based on the node selector and node affinity notes in
-`notes/2-Scheduling/23, 24` and exercise w02 in
-`cka-prep/exercises/1-workloads/`.
+# 3. pod with nodeSelector: generate, edit, create
+kubectl run data-processor --image nginx --dry-run=client -o yaml > dp.yaml
+vi dp.yaml
+```
+
+Add under `spec`, same level as `containers`:
+
+```yaml
+nodeSelector:
+  size: Large
+```
+
+```bash
+kubectl create -f dp.yaml
+kubectl get pod data-processor -o wide
+
+# 4. second label
+kubectl label nodes <worker> color=blue
+
+# 5. deployment; with no taints its pods may land on any node
+kubectl create deployment blue --image=nginx --replicas=3
+kubectl describe nodes | grep -i taint
+kubectl get pods -o wide
+
+# 6. edit in place; the edit rolls the pods out again
+kubectl edit deployment blue
+```
+
+Add under `spec.template.spec`, same level as `containers`:
+
+```yaml
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: color
+          operator: In
+          values:
+          - blue
+```
+
+```bash
+kubectl get pods -l app=blue -o wide
+
+# 7. generate, add affinity with Exists, create
+kubectl create deployment red --image=nginx --replicas=2 --dry-run=client -o yaml > red.yaml
+vi red.yaml
+```
+
+Add under `spec.template.spec`:
+
+```yaml
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+```
+
+```bash
+kubectl create -f red.yaml
+kubectl get pods -l app=red -o wide
+```
+
+**Key insight:** `nodeSelector` is one label with one value. Node
+affinity adds operators: `In` (one of these values), `NotIn` (none of
+these), `Exists` (label present, any value). `required...` means the
+pod stays Pending if no node matches; `preferred...` means the
+scheduler tries, then places it anywhere. `IgnoredDuringExecution`
+means a label change later does not move a running pod.
+
+</details>

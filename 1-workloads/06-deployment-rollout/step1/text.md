@@ -1,34 +1,43 @@
-# Create, update, and roll back the deployment
+# Exercise 06 — Deployment Rolling Update and Rollback
 
-A Deployment manages a set of identical pod replicas. A rolling update
-replaces the pods gradually — a few at a time — so the application stays
-available while the new image is rolled out. Every update is saved as a
-revision in the rollout history, and you can go back to a previous
-revision with a rollback. The exam trap: the old `--record` flag is
-deprecated — record each change cause by annotating the Deployment with
-`kubernetes.io/change-cause` instead.
+Create a Deployment, perform a rolling update, check rollout history, and rollback.
 
-1. Create a namespace called `exercise-06`.
+## Tasks
 
-2. Create a Deployment named `webapp` in the `exercise-06` namespace with:
-
+1. Create a namespace called `exercise-06`
+2. Create a Deployment named `webapp` with:
    - 3 replicas
    - Image: `nginx:1.28`
-   - Strategy: RollingUpdate with `maxSurge=1`, `maxUnavailable=0`
-   - Record the change cause by annotating the Deployment with
-     `kubernetes.io/change-cause`
+   - Strategy: RollingUpdate with maxSurge=1, maxUnavailable=0
+   - Record the change cause
+3. Verify all 3 replicas are running
+4. Update the image to `nginx:1.29` and record the change
+5. Watch the rollout status
+6. Check rollout history — you should see 2 revisions
+7. Rollback to the previous version (nginx:1.28)
+8. Verify the rollback worked by checking the image
 
-3. Verify all 3 replicas are running.
+## Hints
 
-4. Update the image to `nginx:1.29` and record the change (annotate
-   again with `--overwrite`).
+<details>
+<summary>Stuck? Click to reveal hints</summary>
 
-5. Watch the rollout status.
+- `k create deployment webapp --image=nginx:1.28 --replicas=3`
+- `k set image deployment/webapp` to update
+- `k rollout status`, `k rollout history`, `k rollout undo`
+- Annotate with `kubernetes.io/change-cause` to track changes in rollout history
 
-6. Check the rollout history.
+</details>
 
-7. Roll back to the previous version (`nginx:1.28`).
+## Verify
 
-8. Verify the rollback worked by checking the image.
+```bash
+# After initial deploy
+k get deploy webapp -n exercise-06
+k get rs -n exercise-06
+
+# After rollback — image should be nginx:1.28
+k get deploy webapp -n exercise-06 -o jsonpath='{.spec.template.spec.containers[0].image}'
+```
 
 When done, click **CHECK**.

@@ -1,13 +1,10 @@
-# Remove the static pod
+5. Delete the static pod by removing the manifest file
+6. Verify the pod is gone
 
-Deleting the pod with kubectl did not work — the kubelet recreates a
-static pod the moment it disappears. The only way to remove it is to
-delete the manifest file from the node.
+## Cleanup
 
-1. Remove the manifest from the kubelet's static pod directory.
+```bash
+sudo rm /etc/kubernetes/manifests/static-web.yaml
+```
 
-2. Wait a few seconds and confirm the pod is gone:
-
-   `kubectl get pods | grep static-web`{{exec}}
-
-When the pod is gone, click **CHECK**.
+When done, click **CHECK**.

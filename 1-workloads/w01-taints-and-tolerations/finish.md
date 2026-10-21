@@ -1,22 +1,50 @@
-# Taints & Tolerations - done
+<details>
+<summary>Solution</summary>
 
-The exam facts from this exercise:
+```bash
+# 1. look for the Taints line
+kubectl describe node <worker> | grep Taint
 
-- The taint goes on the **node**; the toleration goes on the **pod**,
-  under `spec` at the same level as `containers` — never inside it.
-- Add a taint: `kubectl taint nodes <node> spray=mortein:NoSchedule`.
-- Remove a taint with a trailing `-`:
-  `kubectl taint nodes <node> key=value:effect-`.
-- Generate the pod YAML with
-  `kubectl run bee --image nginx --dry-run=client -o yaml`, then edit —
-  never hand-write the manifest from scratch.
-- Show taints with `kubectl describe node <node> | grep Taint`.
-- A taint does not send a pod to a node; it only lets the node refuse
-  pods that do not tolerate it.
-- `NoSchedule` blocks new pods, `NoExecute` also evicts running ones,
-  `PreferNoSchedule` is only a preference — putting the control plane
-  taint back does not evict `mosquito`.
+# 2. taint the node: key=value:effect
+kubectl taint nodes <worker> spray=mortein:NoSchedule
 
-The exercise is based on the taints and tolerations note in
-`notes/2-Scheduling/22` and exercise w01 in
-`cka-prep/exercises/1-workloads/`.
+# 3. plain pod: it stays Pending, no node accepts it
+kubectl run mosquito --image nginx
+kubectl get pods
+
+# 4. pod with a toleration: generate, edit, create
+kubectl run bee --image nginx --dry-run=client -o yaml > bee.yaml
+vi bee.yaml
+```
+
+Add under `spec`, at the same level as `containers`:
+
+```yaml
+tolerations:
+- key: spray
+  operator: Equal
+  value: mortein
+  effect: NoSchedule
+```
+
+```bash
+kubectl create -f bee.yaml
+kubectl get pods -o wide
+
+# 5. control plane taint
+kubectl describe node <controlplane> | grep Taint
+
+# 6. remove it with a trailing "-"; mosquito schedules there
+kubectl taint nodes <controlplane> node-role.kubernetes.io/control-plane:NoSchedule-
+kubectl get pods -o wide
+
+# 7. put it back
+kubectl taint nodes <controlplane> node-role.kubernetes.io/control-plane:NoSchedule
+```
+
+**Key insight:** a taint does not send a pod to a node. It only lets the
+node refuse pods that do not tolerate it. `NoSchedule` blocks new pods,
+`NoExecute` also evicts running ones, `PreferNoSchedule` is only a
+preference.
+
+</details>
