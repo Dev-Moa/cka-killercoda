@@ -87,8 +87,7 @@ root on `controlplane`, `node01` reachable via `ssh node01`.
 | `c04-kubeconfig/` | custom kubeconfig, context, fix |
 | `c05-kubeadm-install/` | rebuild the cluster: reset, init, join |
 | `c06-certificates-and-pki/` | view certs, CSR approve, new user |
-
-Not ported: `31-argocd-gitops-setup` (tracker: skip, not CKA).
+| `31-argocd-gitops-setup/` | Argo CD install + Application sync (dumbITguy Q02 topic) |
 
 ### `3-storage/` — Domain 3: Storage
 

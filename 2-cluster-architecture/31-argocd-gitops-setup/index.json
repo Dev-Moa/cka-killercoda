@@ -1,0 +1,23 @@
+{
+  "title": "31 - Argo CD GitOps setup",
+  "description": "Install Argo CD, then deploy an application from a Git repository with an Application resource and watch it sync.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Install Argo CD and sync an Application",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}
