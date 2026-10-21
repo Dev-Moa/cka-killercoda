@@ -3,7 +3,8 @@
   "description": "Override a container's startup command and arguments with the pod's command and args fields.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

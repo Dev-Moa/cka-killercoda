@@ -1,0 +1,36 @@
+{
+  "title": "T02 - Control Plane and Worker Node Failure",
+  "description": "Break and fix the scheduler, the API server and a worker kubelet, one at a time.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Part A - scheduler",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh",
+        "background": "step1/background.sh"
+      },
+      {
+        "title": "Part B - API server",
+        "text": "step2/text.md",
+        "verify": "step2/verify.sh",
+        "background": "step2/background.sh"
+      },
+      {
+        "title": "Part C - worker kubelet",
+        "text": "step3/text.md",
+        "verify": "step3/verify.sh",
+        "background": "step3/background.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

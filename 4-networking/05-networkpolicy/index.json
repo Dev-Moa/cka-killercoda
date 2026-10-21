@@ -1,0 +1,23 @@
+{
+  "title": "05 - NetworkPolicy",
+  "description": "Run frontend, backend and attacker pods, then write a NetworkPolicy that lets only the frontend reach the backend and keeps DNS egress open.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Pods and the backend policy",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

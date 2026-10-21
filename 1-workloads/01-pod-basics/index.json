@@ -3,7 +3,8 @@
   "description": "Create a pod with resource requests, limits, and labels, then add and remove labels on the running pod.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

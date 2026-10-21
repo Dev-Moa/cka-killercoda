@@ -3,7 +3,8 @@
   "description": "Create a Job that completes 3 times and a CronJob that runs every hour, then trigger the CronJob manually.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

@@ -3,7 +3,8 @@
   "description": "Install cri-dockerd on node01 and point kubelet at the cri-dockerd socket.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

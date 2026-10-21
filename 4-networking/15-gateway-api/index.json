@@ -1,0 +1,23 @@
+{
+  "title": "15 - Gateway API",
+  "description": "Create a Gateway on port 80 and an HTTPRoute that sends / to a web Service, then confirm the Gateway is Programmed and the route attached.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Gateway, backend and HTTPRoute",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

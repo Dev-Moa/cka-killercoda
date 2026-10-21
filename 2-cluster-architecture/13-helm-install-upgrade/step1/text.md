@@ -1,8 +1,6 @@
 # Exercise 13 — Helm Install, Upgrade, and Rollback
 
 > **Medium** | ~15 min | Domain: Cluster Architecture (25%)
->
-> Related: [README — Cluster Architecture](../../../../CKA-Certified-Kubernetes-Administrator/README.md#domain-4--cluster-architecture-installation--configuration-25)
 
 Install a chart, override values, upgrade to a new version, and roll back when something breaks. Helm is now a standard operational skill on the CKA.
 

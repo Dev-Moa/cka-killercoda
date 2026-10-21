@@ -1,0 +1,23 @@
+{
+  "title": "27 - CNI install (Tigera Operator)",
+  "description": "Install Calico through the Tigera Operator with an Installation resource whose pod CIDR matches the cluster, then confirm the calico-system pods run.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Operator, Installation, calico-system",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

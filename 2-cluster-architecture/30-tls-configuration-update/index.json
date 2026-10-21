@@ -3,7 +3,8 @@
   "description": "Add TLS 1.2 support to a ConfigMap-driven nginx service and restart the deployment so both TLS 1.2 and 1.3 work.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

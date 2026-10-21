@@ -1,0 +1,23 @@
+{
+  "title": "11 - Troubleshoot Cluster Components",
+  "description": "Fix a broken kubelet, broken cluster DNS, check kube-proxy and read the API server audit log.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Fix the cluster",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

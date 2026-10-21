@@ -3,7 +3,8 @@
   "description": "Take a snapshot of etcd, change the cluster, then restore the snapshot so the change disappears.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

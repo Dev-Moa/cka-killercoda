@@ -1,5 +1,7 @@
 # Exercise 20 — Pod Security Standards
 
+Implement Pod Security Standards (PSS) at the namespace level to enforce security policies. This exercise covers enforcing restricted, baseline, and restricted security contexts on pods.
+
 ## Conventions
 
 Understanding PSS troubleshooting trap patterns:

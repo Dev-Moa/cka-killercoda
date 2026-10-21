@@ -3,7 +3,8 @@
   "description": "Create a pod with a main container and a native sidecar that tails the main container's log file.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

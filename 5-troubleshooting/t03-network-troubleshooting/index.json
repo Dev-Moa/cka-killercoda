@@ -1,0 +1,23 @@
+{
+  "title": "T03 - Network Troubleshooting",
+  "description": "Walk the network chain pod, Service, endpoints, DNS and kube-proxy; two breaks are planted.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Fix the network chain",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

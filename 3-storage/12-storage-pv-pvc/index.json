@@ -1,0 +1,28 @@
+{
+  "title": "12 - Storage: PV, PVC, and StorageClass",
+  "description": "Create a hostPath PersistentVolume, bind a PersistentVolumeClaim to it, mount it in a pod, prove the data survives a pod restart, then release the volume.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "PV, PVC and the consumer pod",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      },
+      {
+        "title": "Delete the PVC and check the PV",
+        "text": "step2/text.md",
+        "verify": "step2/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

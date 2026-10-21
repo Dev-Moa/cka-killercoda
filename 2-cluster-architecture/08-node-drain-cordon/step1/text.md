@@ -30,10 +30,6 @@ k get nodes
 # After drain
 k get pods -o wide
 # No pods on the drained node (except DaemonSets)
-
-# After uncordon + scale
-k get pods -o wide
-# Pods should spread across nodes again
 ```
 
 When done, click **CHECK**.

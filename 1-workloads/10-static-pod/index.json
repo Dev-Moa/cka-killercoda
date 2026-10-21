@@ -3,7 +3,8 @@
   "description": "Create a static pod by placing a manifest in the kubelet's static pod directory, and remove it the right way.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

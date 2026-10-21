@@ -17,7 +17,9 @@ labs host everything else. One folder = one scenario.
 <exercise>/
 ├── index.json          # title, steps, backend image
 ├── intro.md            # shown before step 1
-├── background.sh       # runs hidden when the environment starts
+├── background.sh       # runs hidden when the environment starts —
+│                       # ONLY if index.json names it (intro.background);
+│                       # a step may add its own step<N>/background.sh
 ├── step<N>/text.md     # the exercise text
 ├── step<N>/verify.sh   # CHECK button script (exit 0 = pass)
 └── finish.md           # shown after the last step
@@ -25,12 +27,17 @@ labs host everything else. One folder = one scenario.
 
 See https://killercoda.com/creators for the full docs.
 
-Rule: the step text is a verbatim copy of the exercise's own file
-(`CKA-Certified-Kubernetes-Administrator/exercises/<id>/README.md`, or
-`cka-prep/exercises/...` for the W exercises): Context/Tasks/Hints/
-Verify into the step, What tripped me up + Solution into `finish.md`,
-and only a `When done, click **CHECK**.` line added. No rewording, no
-invented prose, no `{{exec}}`/`{{copy}}` decorations.
+Rule: the step text is a verbatim copy of the exercise's own file.
+Numbered exercises come ONLY from the original repo
+(`CKA-Certified-Kubernetes-Administrator/exercises/<id>/README.md`),
+never from a copy that may have been edited. The own exercises (W, C,
+N, T) come from `cka-prep/exercises/<domain>/<id>.md`, the only copy
+that exists. Context/Tasks/Hints/Verify go into the step, What tripped
+me up + Solution into `finish.md`, and only a `When done, click
+**CHECK**.` line is added. No rewording, no invented prose, no
+`{{exec}}`/`{{copy}}` decorations. Troubleshooting T exercises are the
+one exception: their `## Setup` block (the planted break) runs in
+`background.sh` and is shown only in `finish.md`, never in the step.
 Validators check objects and specs only — port the exercise's Verify
 section and the graded fields. Never assert on log text or other
 free-form content the candidate writes.
@@ -80,3 +87,36 @@ root on `controlplane`, `node01` reachable via `ssh node01`.
 | `c04-kubeconfig/` | custom kubeconfig, context, fix |
 | `c05-kubeadm-install/` | rebuild the cluster: reset, init, join |
 | `c06-certificates-and-pki/` | view certs, CSR approve, new user |
+
+Not ported: `31-argocd-gitops-setup` (tracker: skip, not CKA).
+
+### `3-storage/` — Domain 3: Storage
+
+| folder | exercise |
+| --- | --- |
+| `12-storage-pv-pvc/` | PV, PVC and a pod that mounts it |
+| `25-storage-waitforfirstconsumer/` | StorageClass with WaitForFirstConsumer |
+
+### `4-networking/` — Domain 4: Services & Networking
+
+| folder | exercise |
+| --- | --- |
+| `05-networkpolicy/` | NetworkPolicy basics |
+| `15-gateway-api/` | Gateway + HTTPRoute (NGINX Gateway Fabric pre-installed) |
+| `19-ingress-classic/` | classic Ingress (ingress-nginx pre-installed) |
+| `27-cni-tigera-install/` | Calico via the Tigera operator (skim) |
+| `28-network-policy-complex/` | multi-rule NetworkPolicy |
+| `n01-services-and-dns/` | Service types and cluster DNS |
+
+### `5-troubleshooting/` — Domain 5: Troubleshooting
+
+| folder | exercise |
+| --- | --- |
+| `11-troubleshoot-cluster/` | worker kubelet, kube-dns endpoints, kube-proxy, audit log |
+| `17-kubectl-debug/` | ephemeral debug containers, node debug |
+| `29-troubleshoot-etcd-endpoint/` | API server with a wrong etcd endpoint |
+| `t01-application-failure/` | Service selector typo, crashing db, bad image tag |
+| `t02-control-plane-and-node-failure/` | scheduler typo, API server etcd port, worker kubelet (3 steps) |
+| `t03-network-troubleshooting/` | Service targetPort, CoreDNS scaled to 0, kube-proxy |
+| `t04-monitoring-metrics/` | kubectl top (metrics-server pre-installed) |
+| `t05-container-logs/` | container logs, previous, multi-container |

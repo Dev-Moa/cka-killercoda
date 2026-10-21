@@ -3,7 +3,8 @@
   "description": "Create a headless Service and a StatefulSet, then scale it down so the end state matches the exam's checks.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

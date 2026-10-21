@@ -1,0 +1,23 @@
+{
+  "title": "17 - kubectl debug: Pod and Node",
+  "description": "Attach an ephemeral debug container to a running pod and open a node debug shell with the host filesystem.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Debug a pod and a node",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

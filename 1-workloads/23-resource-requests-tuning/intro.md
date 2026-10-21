@@ -4,10 +4,12 @@ You are logged in as `root` on **controlplane** of a two-node kubeadm
 cluster (controlplane + node01). The cluster is ready; `node01` is
 reachable with `ssh node01` if you ever need it.
 
-A Deployment named `web` already runs in namespace `exercise-23` with 3
-replicas, but its resource requests are so large that no node can fit
-them — every pod stays Pending. You will read the pod Events and the
-node capacity to see the real numbers, then lower the requests so all 3
-pods schedule and run.
+A resource request is the amount of CPU and memory the scheduler must
+find free on a node before it places a pod there. If the request is
+bigger than any node can give, the pod stays Pending forever.
 
-You work in namespace `exercise-23`.
+In this exercise you create a Deployment whose requests are too high
+on purpose, read the pod Events and the node capacity to see the real
+numbers, then lower the requests so all 3 pods schedule and run.
+
+You work in namespace `exercise-23`; it is already created.

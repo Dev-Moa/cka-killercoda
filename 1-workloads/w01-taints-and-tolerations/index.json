@@ -3,7 +3,8 @@
   "description": "Taint the worker node, run one pod that tolerates the taint and one that does not, then remove and restore the control plane taint.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

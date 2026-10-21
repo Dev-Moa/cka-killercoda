@@ -3,7 +3,8 @@
   "description": "Take a worker node down for maintenance: cordon it, drain its pods, then uncordon it and scale back up.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

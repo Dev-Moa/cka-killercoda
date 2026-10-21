@@ -1,0 +1,23 @@
+{
+  "title": "29 - Troubleshoot Broken Cluster (Incorrect etcd Endpoint)",
+  "description": "The API server cannot start because it points at the wrong etcd endpoint; find and fix the static pod manifest.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Fix the API server",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

@@ -6,7 +6,6 @@ I also forgot that CronJobs are in the `batch` API group, not `v1`. The YAML syn
 
 When a Job fails, the pod isn't deleted unless the Job's `ttlSecondsAfterFinished` is set. Failed pods stick around for debugging, which is good. But if you're running a test Job, clean it up afterward or you'll have orphan pods.
 
----
 
 <details>
 <summary><b>Solution</b></summary>
@@ -106,3 +105,9 @@ k logs job/hourly-backup-manual-1
 ```
 
 </details>
+
+## Resources
+
+- [Kubernetes Batch Jobs](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
+- [CronJobs](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
+- [Job backoff restart policy](https://kubernetes.io/docs/concepts/workloads/controllers/job/#pod-backoff-failure-policy)

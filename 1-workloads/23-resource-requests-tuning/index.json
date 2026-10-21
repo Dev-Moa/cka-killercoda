@@ -3,7 +3,8 @@
   "description": "Debug a Deployment whose pods stay Pending because of impossible resource requests, then lower the requests so all 3 replicas schedule and run.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

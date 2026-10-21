@@ -3,7 +3,8 @@
   "description": "Copy the admin kubeconfig, point kubectl at it with --kubeconfig, set its context namespace, and fix a broken server port.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

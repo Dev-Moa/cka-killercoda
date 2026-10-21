@@ -3,7 +3,8 @@
   "description": "Create a ConfigMap and a Secret, then inject them into a pod as environment variables and mounted files.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

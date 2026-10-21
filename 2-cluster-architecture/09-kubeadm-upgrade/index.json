@@ -3,7 +3,8 @@
   "description": "Upgrade a two-node kubeadm cluster to the next minor version: control plane first with kubeadm upgrade apply, then the worker node after a drain.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

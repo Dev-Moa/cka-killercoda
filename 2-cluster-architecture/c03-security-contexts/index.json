@@ -3,7 +3,8 @@
   "description": "Set pod- and container-level security contexts: runAsUser 1000 and the MAC_ADMIN capability.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

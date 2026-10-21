@@ -3,7 +3,8 @@
   "description": "Create the docs' CronTab CRD, make one object of the new kind, then delete the CRD.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

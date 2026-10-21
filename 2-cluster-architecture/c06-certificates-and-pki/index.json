@@ -3,7 +3,8 @@
   "description": "Read kubeadm certificates with openssl, then take a new user's CSR from Pending to signed and prove her kubeconfig authenticates.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

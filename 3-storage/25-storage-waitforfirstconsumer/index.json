@@ -1,0 +1,23 @@
+{
+  "title": "25 - Storage with WaitForFirstConsumer Binding",
+  "description": "Create a StorageClass with WaitForFirstConsumer, a local PV and a PVC that stays Pending until a pod mounts it.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "StorageClass, local PV, PVC and the consumer pod",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

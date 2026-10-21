@@ -6,8 +6,6 @@ taint.
 
 ## Tasks
 
-Work in the `default` namespace.
-
 Pick one worker node. Call it `<worker>` below.
 
 1. Check whether `<worker>` has any taints.

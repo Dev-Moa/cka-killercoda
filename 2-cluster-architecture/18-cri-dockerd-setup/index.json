@@ -3,7 +3,8 @@
   "description": "Install and configure cri-dockerd as a container runtime: kernel modules, sysctl, Docker, the binary, systemd units and the CRI socket.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

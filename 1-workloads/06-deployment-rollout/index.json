@@ -3,7 +3,8 @@
   "description": "Create a Deployment, run a rolling update, check the rollout history, and roll back.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

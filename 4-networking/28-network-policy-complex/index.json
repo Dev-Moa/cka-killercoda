@@ -1,0 +1,23 @@
+{
+  "title": "28 - Complex NetworkPolicy",
+  "description": "Three namespaces, three tiers: allow frontend to backend on 8080 and backend to database on 6379, keep DNS open, deny the rest.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Tiers and cross-namespace policies",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

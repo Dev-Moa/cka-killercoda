@@ -3,7 +3,8 @@
   "description": "Create a Deployment with a CPU request, expose it with a ClusterIP Service, and add a HorizontalPodAutoscaler that scales on CPU utilization.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

@@ -6,7 +6,6 @@ I also confused priority (user-defined) with QoS (Quality of Service: Guaranteed
 
 Creating a Pod with a nonexistent PriorityClass doesn't fail — it just fails to schedule (pending forever). No error message. You have to check the events: `kubectl describe pod <name>`.
 
----
 
 <details>
 <summary><b>Solution</b></summary>
@@ -111,3 +110,9 @@ k delete priorityclass high-priority low-priority
 ```
 
 </details>
+
+## Resources
+
+- [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+- [PriorityClass API](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/priority-class-v1/)
+- [Preemption and Priority](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#preemption)

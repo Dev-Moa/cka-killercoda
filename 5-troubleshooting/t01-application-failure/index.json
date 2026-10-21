@@ -1,0 +1,23 @@
+{
+  "title": "T01 - Application Failure",
+  "description": "A two-tier app in namespace shop is broken in three places: a Service with no endpoints, a crashing pod and a pod that never pulls.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Fix the shop app",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

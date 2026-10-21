@@ -3,7 +3,8 @@
   "description": "Create two PriorityClasses with different values and preemption policies, and run one pod in each class.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

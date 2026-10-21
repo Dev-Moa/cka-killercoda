@@ -3,7 +3,8 @@
   "description": "Create a PriorityClass, patch a Deployment's pod template to use it, and add a lower-priority Deployment to compare.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {

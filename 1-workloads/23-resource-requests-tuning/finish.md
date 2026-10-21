@@ -4,7 +4,6 @@
 >
 > Also: resource requests are hard limits for scheduling. If a pod requests 512Mi and node has only 256Mi free, it will NEVER schedule, even if the pod only uses 10Mi at runtime. Requests are for the scheduler, not for actual usage. On the exam, if pods won't schedule, first check if requests are too high via `k describe node`.
 
-
 <details>
 <summary>Solution</summary>
 

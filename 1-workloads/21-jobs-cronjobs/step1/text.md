@@ -63,4 +63,5 @@ k get job -l cronjob-name=hourly-backup
 k logs -l job-name=<triggered-job-name> --all-containers=true
 ```
 
+
 When done, click **CHECK**.

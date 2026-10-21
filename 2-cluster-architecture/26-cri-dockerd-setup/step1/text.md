@@ -18,6 +18,14 @@ Install and configure cri-dockerd as a container runtime alternative to containe
 6. Configure kubelet to use cri-dockerd
 7. Restart kubelet and verify node is Ready
 
+## Key Learning
+
+- cri-dockerd is a CRI adapter for Docker
+- Kubernetes v1.35 dropped built-in dockershim — must use cri-dockerd
+- IP forwarding and kernel modules are prerequisites
+- Socket location: `/run/cri-dockerd.sock`
+- Exam tests installation procedure and troubleshooting
+
 ## Hints
 
 <details>

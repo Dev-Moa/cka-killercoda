@@ -1,0 +1,23 @@
+{
+  "title": "19 - Classic Ingress",
+  "description": "Two Deployments, two ClusterIP Services and one Ingress that routes / and /api by path prefix with a default backend.",
+  "details": {
+    "intro": {
+      "text": "intro.md",
+      "background": "background.sh"
+    },
+    "steps": [
+      {
+        "title": "Services and the Ingress",
+        "text": "step1/text.md",
+        "verify": "step1/verify.sh"
+      }
+    ],
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

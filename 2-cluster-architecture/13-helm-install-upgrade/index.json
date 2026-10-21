@@ -3,7 +3,8 @@
   "description": "Install the Bitnami NGINX chart with Helm, upgrade replicaCount, then roll the release back.",
   "details": {
     "intro": {
-      "text": "intro.md"
+      "text": "intro.md",
+      "background": "background.sh"
     },
     "steps": [
       {
