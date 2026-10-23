@@ -51,17 +51,27 @@ else
   fail=1
 fi
 
-# Check 5: controlplane kubelet runs a newer version than at the start
+# Check 5: controlplane kubelet runs a newer version than at the start.
+# An upgrade only moves UP: landing on a version older than the initial
+# one is a downgrade and fails, no matter how far the number moved.
 if [ -n "$initial" ] && [ -n "$cp_ver" ] && newer_than "$cp_ver" "$initial"; then
   echo "PASS 5: controlplane kubelet upgraded (initial=$initial now=$cp_ver)"
+elif [ -n "$initial" ] && [ -n "$cp_ver" ] && newer_than "$initial" "$cp_ver"; then
+  echo "FAIL 5: controlplane was DOWNGRADED (initial=$initial now=$cp_ver) - the target must be NEWER than the initial version; run 'kubeadm upgrade plan' to see available versions"
+  fail=1
 else
   echo "FAIL 5: controlplane kubelet not upgraded (initial=$initial now=${cp_ver:-not found})"
   fail=1
 fi
 
-# Check 6: node01 kubelet runs a newer version than at the start
+# Check 6: node01 kubelet runs a newer version than at the start.
+# Same direction rule as check 5: older than the initial version is a
+# downgrade and fails.
 if [ -n "$initial" ] && [ -n "$w_ver" ] && newer_than "$w_ver" "$initial"; then
   echo "PASS 6: node01 kubelet upgraded (initial=$initial now=$w_ver)"
+elif [ -n "$initial" ] && [ -n "$w_ver" ] && newer_than "$initial" "$w_ver"; then
+  echo "FAIL 6: node01 was DOWNGRADED (initial=$initial now=$w_ver) - the target must be NEWER than the initial version; run 'kubeadm upgrade plan' to see available versions"
+  fail=1
 else
   echo "FAIL 6: node01 kubelet not upgraded (initial=$initial now=${w_ver:-not found})"
   fail=1

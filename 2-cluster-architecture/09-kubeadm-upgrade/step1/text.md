@@ -8,7 +8,7 @@ Upgrade a cluster from one minor version to the next using kubeadm. The CKA freq
 2. Upgrade the control plane node:
    a. Update the kubeadm package to the target version
    b. Run `kubeadm upgrade plan` to see available upgrades
-   c. Run `kubeadm upgrade apply v1.35.x`
+   c. Run `kubeadm upgrade apply v1.37.x` (the next minor above the version `k get nodes` shows)
    d. Upgrade kubelet and kubectl packages
    e. Restart kubelet
 3. Upgrade a worker node:
