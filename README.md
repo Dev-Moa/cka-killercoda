@@ -27,20 +27,18 @@ labs host everything else. One folder = one scenario.
 
 See https://killercoda.com/creators for the full docs.
 
-Rule: the step text is a verbatim copy of the exercise's own file.
-Numbered exercises come ONLY from the original repo
+Rule: the step text is a verbatim copy of the exercise's own file. All
+scenarios are the 31 exercises from the original repo
 (`CKA-Certified-Kubernetes-Administrator/exercises/<id>/README.md`),
 never from a copy that may have been edited. The own exercises (W, C,
-N, T) come from `cka-prep/exercises/<domain>/<id>.md`, the only copy
-that exists. Context/Tasks/Hints/Verify go into the step, What tripped
-me up + Solution into `finish.md`, and only a `When done, click
-**CHECK**.` line is added. No rewording, no invented prose, no
-`{{exec}}`/`{{copy}}` decorations. Troubleshooting T exercises are the
-one exception: their `## Setup` block (the planted break) runs in
-`background.sh` and is shown only in `finish.md`, never in the step.
-Validators check objects and specs only — port the exercise's Verify
-section and the graded fields. Never assert on log text or other
-free-form content the candidate writes.
+N, T) were removed on 2026-10-23 to keep the platform to the 31
+originals; they still live in `cka-prep/exercises/<domain>/<id>.md`.
+Context/Tasks/Hints/Verify go into the step, What tripped me up +
+Solution into `finish.md`, and only a `When done, click **CHECK**.`
+line is added. No rewording, no invented prose, no
+`{{exec}}`/`{{copy}}` decorations. Validators check objects and specs
+only — port the exercise's Verify section and the graded fields. Never
+assert on log text or other free-form content the candidate writes.
 
 ## Scenarios
 
@@ -63,10 +61,6 @@ root on `controlplane`, `node01` reachable via `ssh node01`.
 | `22-priorityclass/` | PriorityClass + preemptionPolicy |
 | `23-resource-requests-tuning/` | fix oversubscribed requests |
 | `24-priorityclass-patch/` | patch a PriorityClass into a Deployment |
-| `w01-taints-and-tolerations/` | taints & tolerations |
-| `w02-node-selectors-and-affinity/` | nodeSelector & node affinity |
-| `w03-daemonset/` | DaemonSet with control-plane toleration |
-| `w04-commands-and-arguments/` | command & args overrides |
 
 ### `2-cluster-architecture/` — Domain 2: Cluster Architecture, Installation & Configuration
 
@@ -81,12 +75,6 @@ root on `controlplane`, `node01` reachable via `ssh node01`.
 | `20-pod-security-standards/` | Pod Security Standards labels |
 | `26-cri-dockerd-setup/` | cri-dockerd install (node01) |
 | `30-tls-configuration-update/` | TLS 1.2 config + restart |
-| `c01-etcd-backup-restore/` | etcd snapshot + restore |
-| `c02-crd-custom-resource/` | CRD + custom resource |
-| `c03-security-contexts/` | pod- and container-level security contexts |
-| `c04-kubeconfig/` | custom kubeconfig, context, fix |
-| `c05-kubeadm-install/` | rebuild the cluster: reset, init, join |
-| `c06-certificates-and-pki/` | view certs, CSR approve, new user |
 | `31-argocd-gitops-setup/` | Argo CD install + Application sync (dumbITguy Q02 topic) |
 
 ### `3-storage/` — Domain 3: Storage
@@ -105,7 +93,6 @@ root on `controlplane`, `node01` reachable via `ssh node01`.
 | `19-ingress-classic/` | classic Ingress (ingress-nginx pre-installed) |
 | `27-cni-tigera-install/` | Calico via the Tigera operator (skim) |
 | `28-network-policy-complex/` | multi-rule NetworkPolicy |
-| `n01-services-and-dns/` | Service types and cluster DNS |
 
 ### `5-troubleshooting/` — Domain 5: Troubleshooting
 
@@ -114,8 +101,3 @@ root on `controlplane`, `node01` reachable via `ssh node01`.
 | `11-troubleshoot-cluster/` | worker kubelet, kube-dns endpoints, kube-proxy, audit log |
 | `17-kubectl-debug/` | ephemeral debug containers, node debug |
 | `29-troubleshoot-etcd-endpoint/` | API server with a wrong etcd endpoint |
-| `t01-application-failure/` | Service selector typo, crashing db, bad image tag |
-| `t02-control-plane-and-node-failure/` | scheduler typo, API server etcd port, worker kubelet (3 steps) |
-| `t03-network-troubleshooting/` | Service targetPort, CoreDNS scaled to 0, kube-proxy |
-| `t04-monitoring-metrics/` | kubectl top (metrics-server pre-installed) |
-| `t05-container-logs/` | container logs, previous, multi-container |
